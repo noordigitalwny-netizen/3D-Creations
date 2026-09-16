@@ -1,0 +1,142 @@
+export interface ProductItem {
+  id: string;
+  slug: string;
+  name: string;
+  brand: string;
+  material: string;
+  colorName: string;
+  colorHex: string;
+  diameter: string;
+  weight: string;
+  price: number;
+  inStock: boolean;
+  stockCount: number;
+  description: string;
+  isPopular?: boolean;
+}
+
+export const productsData: ProductItem[] = [
+  {
+    id: "overture-pla-black",
+    slug: "overture-pla-matte-black",
+    name: "Overture Matte PLA Spool",
+    brand: "Overture",
+    material: "PLA",
+    colorName: "Matte Black",
+    colorHex: "#1e293b",
+    diameter: "1.75 mm",
+    weight: "1.0 kg (2.2 lbs)",
+    price: 24.99,
+    inStock: true,
+    stockCount: 14,
+    description: "Sleek, glare-free matte black finish. Excellent layer adhesion and zero warping.",
+    isPopular: true,
+  },
+  {
+    id: "overture-pla-digital-blue",
+    slug: "overture-pla-digital-blue",
+    name: "Overture Digital Blue PLA",
+    brand: "Overture",
+    material: "PLA",
+    colorName: "Digital Blue",
+    colorHex: "#0284c7",
+    diameter: "1.75 mm",
+    weight: "1.0 kg (2.2 lbs)",
+    price: 24.99,
+    inStock: true,
+    stockCount: 8,
+    description: "Vibrant technical blue ideal for mechanical prototypes and functional jigs.",
+  },
+  {
+    id: "overture-pla-electric-yellow",
+    slug: "overture-pla-electric-yellow",
+    name: "Overture Electric Yellow PLA",
+    brand: "Overture",
+    material: "PLA",
+    colorName: "Electric Yellow",
+    colorHex: "#eab308",
+    diameter: "1.75 mm",
+    weight: "1.0 kg (2.2 lbs)",
+    price: 24.99,
+    inStock: true,
+    stockCount: 6,
+    description: "High-visibility safety yellow for industrial tool holders and accent parts.",
+  },
+  {
+    id: "overture-pla-space-grey",
+    slug: "overture-pla-space-grey",
+    name: "Overture Space Grey PLA",
+    brand: "Overture",
+    material: "PLA",
+    colorName: "Space Grey",
+    colorHex: "#64748b",
+    diameter: "1.75 mm",
+    weight: "1.0 kg (2.2 lbs)",
+    price: 24.99,
+    inStock: true,
+    stockCount: 11,
+    description: "Smooth metallic slate grey for modern enclosures and scale models.",
+    isPopular: true,
+  },
+  {
+    id: "overture-pla-fire-red",
+    slug: "overture-pla-fire-red",
+    name: "Overture Fire Red PLA",
+    brand: "Overture",
+    material: "PLA",
+    colorName: "Fire Red",
+    colorHex: "#ef4444",
+    diameter: "1.75 mm",
+    weight: "1.0 kg (2.2 lbs)",
+    price: 24.99,
+    inStock: true,
+    stockCount: 5,
+    description: "Rich gloss red ideal for multi-color accents and prominent branding.",
+  },
+  {
+    id: "overture-pla-silk-gold",
+    slug: "overture-pla-silk-gold",
+    name: "Overture Silk Gold PLA",
+    brand: "Overture",
+    material: "Silk PLA",
+    colorName: "Silk Gold",
+    colorHex: "#d97706",
+    diameter: "1.75 mm",
+    weight: "1.0 kg (2.2 lbs)",
+    price: 27.99,
+    inStock: true,
+    stockCount: 4,
+    description: "Ultra-glossy metallic sheen for trophies, decorative art, and awards.",
+  },
+  {
+    id: "overture-pla-olive-green",
+    slug: "overture-pla-olive-green",
+    name: "Overture Tactical Green PLA",
+    brand: "Overture",
+    material: "PLA",
+    colorName: "Olive Green",
+    colorHex: "#3f6212",
+    diameter: "1.75 mm",
+    weight: "1.0 kg (2.2 lbs)",
+    price: 24.99,
+    inStock: true,
+    stockCount: 7,
+    description: "Matte tactical olive green, popular for outdoor gear accessories.",
+  },
+  {
+    id: "overture-pla-pure-white",
+    slug: "overture-pla-pure-white",
+    name: "Overture Pure White PLA",
+    brand: "Overture",
+    material: "PLA",
+    colorName: "Pure White",
+    colorHex: "#f8fafc",
+    diameter: "1.75 mm",
+    weight: "1.0 kg (2.2 lbs)",
+    price: 24.99,
+    inStock: true,
+    stockCount: 15,
+    description: "Crisp white filament for architectural models and lithophanes.",
+    isPopular: true,
+  },
+];
