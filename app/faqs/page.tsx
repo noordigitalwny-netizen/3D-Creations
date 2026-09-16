@@ -2,7 +2,7 @@
 
 import React, { useState } from "react";
 import Link from "next/link";
-import { ChevronDown, HelpCircle, ArrowRight, ShieldCheck } from "lucide-react";
+import { ChevronDown, HelpCircle, ArrowRight } from "lucide-react";
 import { siteConfig } from "@/config/site";
 
 export default function FaqsPage() {
@@ -36,17 +36,17 @@ export default function FaqsPage() {
   ];
 
   return (
-    <div className="bg-slate-950 py-12 lg:py-20 border-b border-slate-800 bg-grid-pattern min-h-screen">
+    <div className="bg-slate-50 py-12 lg:py-20 border-b border-gray-200 min-h-screen">
       <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 space-y-12">
         {/* Header */}
         <div className="text-center space-y-3">
-          <span className="text-xs font-bold uppercase tracking-widest text-amber-400 bg-amber-950/80 px-3.5 py-1.5 rounded-full border border-amber-800">
+          <span className="text-xs font-bold uppercase tracking-widest text-blue-600 bg-blue-100 px-3.5 py-1.5 rounded-full border border-blue-200">
             Frequently Asked Questions
           </span>
-          <h1 className="text-3xl sm:text-5xl font-black text-white tracking-tight">
+          <h1 className="text-3xl sm:text-5xl font-extrabold text-slate-900 tracking-tight">
             Got Questions? We Have Answers.
           </h1>
-          <p className="text-base text-slate-300">
+          <p className="text-base text-slate-600">
             Everything you need to know about our local Bangor, PA 3D scanning, 3D printing, and reverse engineering services.
           </p>
         </div>
@@ -58,26 +58,26 @@ export default function FaqsPage() {
             return (
               <div
                 key={idx}
-                className="rounded-2xl bg-slate-900 border border-slate-800 overflow-hidden transition-all duration-200"
+                className="rounded-lg bg-white border border-gray-200 overflow-hidden shadow-sm transition-all duration-200"
               >
                 <button
                   type="button"
                   onClick={() => setOpenIndex(isOpen ? null : idx)}
-                  className="w-full p-6 text-left flex items-center justify-between space-x-4 touch-target-min hover:bg-slate-800/50"
+                  className="w-full p-6 text-left flex items-center justify-between space-x-4 touch-target-min hover:bg-gray-50"
                 >
-                  <span className="text-base sm:text-lg font-bold text-white flex items-center gap-3">
-                    <HelpCircle className="w-5 h-5 text-amber-400 shrink-0" />
+                  <span className="text-base sm:text-lg font-bold text-slate-900 flex items-center gap-3">
+                    <HelpCircle className="w-5 h-5 text-blue-600 shrink-0" />
                     <span>{faq.q}</span>
                   </span>
                   <ChevronDown
                     className={`w-5 h-5 text-slate-400 transition-transform duration-200 shrink-0 ${
-                      isOpen ? "rotate-180 text-amber-400" : ""
+                      isOpen ? "rotate-180 text-blue-600" : ""
                     }`}
                   />
                 </button>
 
                 {isOpen && (
-                  <div className="px-6 pb-6 pt-2 text-sm text-slate-300 leading-relaxed border-t border-slate-800/60 animate-in fade-in duration-150">
+                  <div className="px-6 pb-6 pt-2 text-sm text-slate-600 leading-relaxed border-t border-gray-100 animate-in fade-in duration-150">
                     {faq.a}
                   </div>
                 )}
@@ -87,22 +87,22 @@ export default function FaqsPage() {
         </div>
 
         {/* Bottom CTA Box */}
-        <div className="rounded-2xl bg-slate-900 border border-slate-800 p-8 text-center space-y-4 shadow-xl">
-          <h3 className="text-xl font-bold text-white">Have a Specific Question for Our Engineer?</h3>
-          <p className="text-sm text-slate-400 max-w-md mx-auto">
+        <div className="rounded-lg bg-white border border-gray-200 p-8 text-center space-y-4 shadow-sm">
+          <h3 className="text-xl font-bold text-slate-900">Have a Specific Question for Our Engineer?</h3>
+          <p className="text-sm text-slate-600 max-w-md mx-auto">
             Give us a call directly or send us a message with your project details.
           </p>
           <div className="flex flex-col sm:flex-row justify-center gap-4 pt-2">
             <Link
               href="/contact"
-              className="px-6 py-3 bg-amber-500 hover:bg-amber-400 text-slate-950 font-bold rounded-xl text-xs flex items-center justify-center space-x-2 touch-target-min"
+              className="px-6 py-3 bg-blue-600 hover:bg-blue-700 text-white font-bold rounded-md text-xs flex items-center justify-center space-x-2 touch-target-min"
             >
               <span>Contact Studio</span>
               <ArrowRight className="w-4 h-4" />
             </Link>
             <a
               href={`tel:${siteConfig.contact.phoneRaw}`}
-              className="px-6 py-3 bg-slate-950 hover:bg-slate-800 text-white font-bold border border-slate-700 rounded-xl text-xs flex items-center justify-center space-x-2 touch-target-min"
+              className="px-6 py-3 bg-white hover:bg-gray-100 text-slate-900 font-bold border border-gray-300 rounded-md text-xs flex items-center justify-center space-x-2 touch-target-min"
             >
               <span>Call: {siteConfig.contact.phone}</span>
             </a>

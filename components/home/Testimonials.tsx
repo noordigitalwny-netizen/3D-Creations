@@ -33,16 +33,16 @@ export default function Testimonials() {
   ];
 
   return (
-    <section className="py-16 lg:py-24 bg-slate-900/40 border-b border-slate-800/80">
+    <section className="py-16 lg:py-24 bg-white border-b border-gray-200">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="text-center max-w-2xl mx-auto mb-14 space-y-3">
-          <span className="text-xs font-bold uppercase tracking-widest text-amber-400 bg-amber-950/60 px-3.5 py-1 rounded-full border border-amber-800/50">
+          <span className="text-xs font-bold uppercase tracking-widest text-blue-600 bg-blue-50 px-3.5 py-1.5 rounded-full border border-blue-200">
             Community Feedback
           </span>
-          <h2 className="text-3xl sm:text-4xl font-extrabold text-white tracking-tight">
+          <h2 className="text-3xl sm:text-4xl font-extrabold text-slate-900 tracking-tight">
             Trusted by Slate Belt Locals
           </h2>
-          <p className="text-sm text-slate-400">
+          <p className="text-sm text-slate-600">
             See how local engineers, businesses, and creators rely on our scanning and 3D printing studio.
           </p>
         </div>
@@ -51,32 +51,32 @@ export default function Testimonials() {
           {reviews.map((rev, i) => (
             <div
               key={i}
-              className="rounded-2xl bg-slate-950 border border-slate-800 p-7 flex flex-col justify-between shadow-xl relative"
+              className="rounded-lg bg-white border border-gray-200 p-7 flex flex-col justify-between shadow-sm relative"
             >
-              <Quote className="absolute top-6 right-6 w-8 h-8 text-slate-800 pointer-events-none" />
+              <Quote className="absolute top-6 right-6 w-8 h-8 text-gray-200 pointer-events-none" />
 
               <div>
                 <div className="flex items-center space-x-1 mb-4">
                   {[...Array(rev.stars)].map((_, s) => (
                     <Star key={s} className="w-4 h-4 fill-amber-400 text-amber-400" />
                   ))}
-                  <span className="text-xs font-bold text-amber-400 ml-2">5.0 / 5.0</span>
+                  <span className="text-xs font-bold text-slate-700 ml-2">5.0 / 5.0</span>
                 </div>
 
-                <p className="text-sm text-slate-300 leading-relaxed italic mb-6">
+                <p className="text-sm text-slate-700 leading-relaxed italic mb-6">
                   &quot;{rev.quote}&quot;
                 </p>
               </div>
 
-              <div className="pt-4 border-t border-slate-800/80 flex items-center justify-between">
+              <div className="pt-4 border-t border-gray-100 flex items-center justify-between">
                 <div>
-                  <h4 className="text-sm font-bold text-white">{rev.name}</h4>
-                  <div className="flex items-center space-x-1 text-xs text-slate-400">
-                    <MapPin className="w-3 h-3 text-cyan-400" />
+                  <h4 className="text-sm font-bold text-slate-900">{rev.name}</h4>
+                  <div className="flex items-center space-x-1 text-xs text-slate-500">
+                    <MapPin className="w-3 h-3 text-blue-600" />
                     <span>{rev.location}</span>
                   </div>
                 </div>
-                <span className="text-[10px] font-semibold text-cyan-400 bg-cyan-950 px-2.5 py-1 rounded border border-cyan-800">
+                <span className="text-[10px] font-semibold text-blue-700 bg-blue-50 px-2.5 py-1 rounded border border-blue-200">
                   {rev.highlight}
                 </span>
               </div>
