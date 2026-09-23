@@ -47,6 +47,7 @@ export default async function HomePage() {
         headline={heroHeadline}
         subtitle={heroSubtitle}
         address={bangorAddress}
+        phone={phoneNumber}
       />
       <WhyLocal />
       <EquipmentShowcase />
