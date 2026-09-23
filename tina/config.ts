@@ -1,21 +1,9 @@
 import { defineConfig } from "tinacms";
 
-// Automatically detect branch for local, Vercel, and GitHub environments
-const branch =
-  process.env.NEXT_PUBLIC_TINA_BRANCH ||
-  process.env.NEXT_PUBLIC_VERCEL_GIT_COMMIT_REF ||
-  process.env.VERCEL_GIT_COMMIT_REF ||
-  process.env.HEAD ||
-  "main";
-
 export default defineConfig({
-  branch,
-
-  // Get clientId and token from tina.io for production Tina Cloud authentication.
-  // In local development, Tina runs locally without requiring these values.
-  clientId: process.env.NEXT_PUBLIC_TINA_CLIENT_ID || null,
-  token: process.env.TINA_TOKEN || null,
-
+  branch: "main",
+  clientId: "d83d34dc-2ed4-4e39-a2c5-7a85523b655f",
+  token: process.env.TINA_TOKEN,
   build: {
     outputFolder: "admin",
     publicFolder: "public",
@@ -29,96 +17,28 @@ export default defineConfig({
   schema: {
     collections: [
       {
+        name: "site_content",
+        label: "Site Text",
+        path: "content/pages",
+        format: "json",
+        fields: [
+          { type: "string", name: "heroHeadline", label: "Hero Headline" },
+          { type: "string", name: "heroSubtitle", label: "Hero Subtitle" },
+          { type: "string", name: "phone", label: "Phone Number" }
+        ],
+      },
+      {
         name: "products",
         label: "Products",
         path: "content/products",
         format: "json",
-        ui: {
-          router: () => "/store",
-        },
         fields: [
-          {
-            type: "string",
-            name: "title",
-            label: "Title",
-            isTitle: true,
-            required: true,
-          },
-          {
-            type: "rich-text",
-            name: "description",
-            label: "Description",
-          },
-          {
-            type: "number",
-            name: "price",
-            label: "Price",
-          },
-          {
-            type: "string",
-            name: "category",
-            label: "Category",
-            options: ["PLA", "Silk PLA", "PETG", "ABS", "TPU"],
-          },
-          {
-            type: "boolean",
-            name: "inStock",
-            label: "In Stock",
-          },
-          {
-            type: "image",
-            name: "image",
-            label: "Image",
-          },
+          { type: "string", name: "title", label: "Title", isTitle: true, required: true },
+          { type: "number", name: "price", label: "Price" },
+          { type: "image", name: "image", label: "Product Image" },
+          { type: "boolean", name: "inStock", label: "In Stock" }
         ],
-      },
-      {
-        name: "site_content",
-        label: "Site Content",
-        path: "content/pages",
-        format: "json",
-        ui: {
-          allowedActions: {
-            create: false,
-            delete: false,
-          },
-        },
-        fields: [
-          {
-            type: "string",
-            name: "heroHeadline",
-            label: "Hero Headline",
-          },
-          {
-            type: "string",
-            name: "heroSubtitle",
-            label: "Hero Subtitle",
-            ui: {
-              component: "textarea",
-            },
-          },
-          {
-            type: "string",
-            name: "phone",
-            label: "Phone",
-          },
-          {
-            type: "string",
-            name: "phoneNumber",
-            label: "Phone Number",
-          },
-          {
-            type: "string",
-            name: "bangorAddress",
-            label: "Bangor Address",
-          },
-          {
-            type: "string",
-            name: "businessHours",
-            label: "Business Hours",
-          },
-        ],
-      },
+      }
     ],
   },
 });
