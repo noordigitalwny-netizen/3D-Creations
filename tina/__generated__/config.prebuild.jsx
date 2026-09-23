@@ -7,6 +7,8 @@ var config_default = defineConfig({
   // In local development, Tina runs locally without requiring these values.
   clientId: process.env.NEXT_PUBLIC_TINA_CLIENT_ID || null,
   token: process.env.TINA_TOKEN || null,
+  // @ts-expect-error fallback when Tina Cloud keys are not set
+  contentApiUrlOverride: process.env.NEXT_PUBLIC_TINA_CLIENT_ID ? void 0 : "http://localhost:4001/graphql",
   build: {
     outputFolder: "admin",
     publicFolder: "public"

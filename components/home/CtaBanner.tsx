@@ -3,7 +3,17 @@ import Link from "next/link";
 import { ArrowRight, Phone, ShieldCheck } from "lucide-react";
 import { siteConfig } from "@/config/site";
 
-export default function CtaBanner() {
+interface CtaBannerProps {
+  phone?: string;
+  address?: string;
+}
+
+export default function CtaBanner({
+  phone = siteConfig.contact.phone,
+  address = siteConfig.location.fullFormatted,
+}: CtaBannerProps) {
+  const phoneRaw = phone.replace(/[^0-9+]/g, "");
+
   return (
     <section className="py-16 bg-blue-900 text-white relative overflow-hidden">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center max-w-4xl space-y-6">
@@ -30,16 +40,16 @@ export default function CtaBanner() {
           </Link>
 
           <a
-            href={`tel:${siteConfig.contact.phoneRaw}`}
+            href={`tel:${phoneRaw}`}
             className="w-full sm:w-auto h-12 px-8 flex items-center justify-center space-x-2 text-base font-bold text-white bg-blue-800 hover:bg-blue-700 border border-blue-700 rounded-md transition-colors touch-target-min"
           >
             <Phone className="w-5 h-5 text-blue-300" />
-            <span>Call Studio: {siteConfig.contact.phone}</span>
+            <span>Call Studio: {phone}</span>
           </a>
         </div>
 
         <div className="pt-2 text-xs text-blue-200 flex items-center justify-center space-x-4">
-          <span>📍 {siteConfig.location.fullFormatted}</span>
+          <span>📍 {address}</span>
           <span>•</span>
           <span>⏱️ Response within 4 Business Hours</span>
         </div>
