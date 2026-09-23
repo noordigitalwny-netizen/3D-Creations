@@ -1,6 +1,7 @@
 import React from "react";
 import Link from "next/link";
 import { siteConfig } from "@/config/site";
+import { getSiteContent, SiteContent } from "@/lib/content";
 import {
   MapPin,
   Phone,
@@ -9,8 +10,13 @@ import {
   ShieldCheck,
 } from "lucide-react";
 
-export default function Footer() {
+interface FooterProps {
+  content?: SiteContent;
+}
+
+export default function Footer({ content }: FooterProps) {
   const currentYear = new Date().getFullYear();
+  const siteContent = content || getSiteContent();
 
   return (
     <footer className="bg-slate-900 text-slate-300 pt-16 pb-12 border-t border-slate-800">
@@ -82,15 +88,15 @@ export default function Footer() {
             <div className="space-y-2.5 text-sm">
               <div className="flex items-start space-x-2.5">
                 <MapPin className="w-4 h-4 text-blue-400 mt-0.5 shrink-0" />
-                <span className="text-slate-300">{siteConfig.location.fullFormatted}</span>
+                <span className="text-slate-300">{siteContent.bangorAddress || siteConfig.location.fullFormatted}</span>
               </div>
               <div className="flex items-center space-x-2.5">
                 <Phone className="w-4 h-4 text-blue-400 shrink-0" />
                 <a
-                  href={`tel:${siteConfig.contact.phoneRaw}`}
+                  href={`tel:${(siteContent.phoneNumber || siteConfig.contact.phone).replace(/[^0-9+]/g, "")}`}
                   className="hover:text-white transition-colors text-slate-300 font-medium"
                 >
-                  {siteConfig.contact.phone}
+                  {siteContent.phoneNumber || siteConfig.contact.phone}
                 </a>
               </div>
               <div className="flex items-center space-x-2.5">
@@ -104,7 +110,7 @@ export default function Footer() {
               </div>
               <div className="flex items-start space-x-2.5 pt-1 text-xs text-slate-400">
                 <Clock className="w-4 h-4 text-slate-500 mt-0.5 shrink-0" />
-                <span>{siteConfig.contact.hours}</span>
+                <span>{siteContent.businessHours || siteConfig.contact.hours}</span>
               </div>
             </div>
           </div>

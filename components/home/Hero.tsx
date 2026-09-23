@@ -1,9 +1,18 @@
 import React from "react";
 import Link from "next/link";
 import { ArrowRight, Calculator, MapPin, ShieldCheck } from "lucide-react";
-import { siteConfig } from "@/config/site";
 
-export default function Hero() {
+interface HeroProps {
+  headline?: string;
+  subtitle?: string;
+  address?: string;
+}
+
+export default function Hero({
+  headline = "Metrology-Grade 3D Scanning & Multi-Color 3D Printing",
+  subtitle = "Local 3D scanning down to 0.02mm precision and rapid additive manufacturing in Bangor, PA. Zero shipping risks, fast local pickup, and personal engineering support.",
+  address = "Bangor, PA 18013 | Slate Belt Region",
+}: HeroProps) {
   return (
     <section className="relative bg-slate-900 text-white min-h-[520px] lg:min-h-[580px] py-20 lg:py-28 flex items-center justify-center overflow-hidden">
       {/* Background Banner Overlay */}
@@ -14,17 +23,17 @@ export default function Hero() {
         {/* Local Studio Badge */}
         <div className="inline-flex items-center space-x-2 px-4 py-1.5 rounded-full bg-white/10 backdrop-blur-md border border-white/20 text-white text-xs font-semibold">
           <MapPin className="w-3.5 h-3.5 text-blue-400" />
-          <span>Local Slate Belt Studio • Bangor, PA 18013</span>
+          <span>Local Slate Belt Studio • {address}</span>
         </div>
 
         {/* Main Centered Headline */}
         <h1 className="text-3xl sm:text-5xl lg:text-6xl font-extrabold tracking-tight text-white leading-tight">
-          Metrology-Grade 3D Scanning & Multi-Color 3D Printing
+          {headline}
         </h1>
 
         {/* Subtitle */}
         <p className="text-base sm:text-xl text-slate-200 leading-relaxed font-normal max-w-2xl mx-auto">
-          Local 3D scanning down to <strong className="text-white">0.02mm precision</strong> and rapid additive manufacturing in Bangor, PA. Zero shipping risks, fast local pickup, and personal engineering support.
+          {subtitle}
         </p>
 
         {/* Local Features Row */}

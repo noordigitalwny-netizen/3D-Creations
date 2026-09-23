@@ -1,0 +1,25 @@
+{
+  "title": "Overture Matte PLA Spool",
+  "description": {
+    "type": "root",
+    "children": [
+      {
+        "type": "p",
+        "children": [
+          {
+            "type": "text",
+            "text": "Sleek, glare-free matte black finish. Excellent layer adhesion and zero warping."
+          }
+        ]
+      }
+    ]
+  },
+  "price": 24.99,
+  "category": "PLA",
+  "inStock": true,
+  "image": "/uploads/overture-spool.png",
+  "colorName": "Matte Black",
+  "colorHex": "#1e293b",
+  "diameter": "1.75 mm",
+  "weight": "1.0 kg (2.2 lbs)"
+}

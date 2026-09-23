@@ -1,0 +1,25 @@
+{
+  "title": "Overture Silk Gold PLA",
+  "description": {
+    "type": "root",
+    "children": [
+      {
+        "type": "p",
+        "children": [
+          {
+            "type": "text",
+            "text": "Ultra-glossy metallic sheen for trophies, decorative art, and awards."
+          }
+        ]
+      }
+    ]
+  },
+  "price": 27.99,
+  "category": "Silk PLA",
+  "inStock": true,
+  "image": "/uploads/overture-spool.png",
+  "colorName": "Silk Gold",
+  "colorHex": "#d97706",
+  "diameter": "1.75 mm",
+  "weight": "1.0 kg (2.2 lbs)"
+}

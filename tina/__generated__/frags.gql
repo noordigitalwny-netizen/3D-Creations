@@ -1,0 +1,18 @@
+fragment ProductsParts on Products {
+  __typename
+  title
+  description
+  price
+  category
+  inStock
+  image
+}
+
+fragment Site_contentParts on Site_content {
+  __typename
+  heroHeadline
+  heroSubtitle
+  bangorAddress
+  phoneNumber
+  businessHours
+}

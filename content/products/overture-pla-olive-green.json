@@ -1,0 +1,25 @@
+{
+  "title": "Overture Tactical Green PLA",
+  "description": {
+    "type": "root",
+    "children": [
+      {
+        "type": "p",
+        "children": [
+          {
+            "type": "text",
+            "text": "Matte tactical olive green, popular for outdoor gear accessories and mechanical cases."
+          }
+        ]
+      }
+    ]
+  },
+  "price": 24.99,
+  "category": "PLA",
+  "inStock": true,
+  "image": "/uploads/overture-spool.png",
+  "colorName": "Olive Green",
+  "colorHex": "#3f6212",
+  "diameter": "1.75 mm",
+  "weight": "1.0 kg (2.2 lbs)"
+}

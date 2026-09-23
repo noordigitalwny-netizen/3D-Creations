@@ -57,6 +57,29 @@ All site content, pricing logic, products, and metadata are 100% customizable vi
 | **Pricing Logic & Rates** | [`lib/pricing.ts`](lib/pricing.ts) | Adjust hourly machine rates (`hourlyMachineRate`), material cost/gram (`materialCostPerGram`), setup fee, and scanning base fees. |
 | **Filament Store Stock** | [`data/products.ts`](data/products.ts) | Update local spool inventory, stock counts, colors, materials, and prices. |
 | **Project Gallery** | [`data/gallery.ts`](data/gallery.ts) | Manage showcase images, categories, and tags. |
+| **Visual CMS Admin** | [`tina/config.ts`](tina/config.ts) | TinaCMS schema definitions for `products` and `site_content`. |
+
+---
+
+## 🦙 TinaCMS Admin Portal (No Database Required)
+
+The site features a Git-backed content management system powered by **TinaCMS**. Changes made in the admin portal are committed directly to your GitHub repository as JSON files.
+
+### 1. Local Development Admin
+1. Start the development server:
+   ```bash
+   npm run dev
+   ```
+2. Navigate to [http://localhost:3000/admin](http://localhost:3000/admin) to access the Tina visual management panel.
+3. Edit products (`content/products/`) and site copy (`content/pages/`) with real-time Git saves.
+
+### 2. Production Setup (Tina Cloud)
+1. Sign up at [Tina.io](https://tina.io) and create a project pointing to your GitHub repository `noordigitalwny-netizen/3D-Creations`.
+2. In your Vercel project environment variables, add:
+   - `NEXT_PUBLIC_TINA_CLIENT_ID`: Your Tina Cloud Client ID
+   - `TINA_TOKEN`: Your Tina Cloud Read/Write Token
+   - `NEXT_PUBLIC_TINA_BRANCH`: `main`
+3. Once set, authenticated team members can log into `https://your-domain.com/admin` to edit live content.
 
 ---
 

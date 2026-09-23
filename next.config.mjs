@@ -12,6 +12,18 @@ const nextConfig = {
     contentDispositionType: "attachment",
     contentSecurityPolicy: "default-src 'self'; script-src 'none'; sandbox;",
   },
+  async rewrites() {
+    return [
+      {
+        source: "/admin",
+        destination: "/admin/index.html",
+      },
+      {
+        source: "/admin/",
+        destination: "/admin/index.html",
+      },
+    ];
+  },
 };
 
 export default nextConfig;

@@ -1,0 +1,25 @@
+{
+  "title": "Overture Fire Red PLA",
+  "description": {
+    "type": "root",
+    "children": [
+      {
+        "type": "p",
+        "children": [
+          {
+            "type": "text",
+            "text": "Rich gloss red ideal for multi-color accents and prominent branding."
+          }
+        ]
+      }
+    ]
+  },
+  "price": 24.99,
+  "category": "PLA",
+  "inStock": true,
+  "image": "/uploads/overture-spool.png",
+  "colorName": "Fire Red",
+  "colorHex": "#ef4444",
+  "diameter": "1.75 mm",
+  "weight": "1.0 kg (2.2 lbs)"
+}
