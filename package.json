@@ -3,21 +3,19 @@
   "version": "1.0.0",
   "private": true,
   "scripts": {
-    "dev": "tinacms dev -c \"next dev\"",
-    "build": "tinacms build && next build",
+    "dev": "next dev",
+    "build": "next build",
     "start": "next start",
-    "lint": "next lint",
-    "tinacms": "tinacms"
+    "lint": "next lint"
   },
   "dependencies": {
-    "@tinacms/cli": "^3.0.0",
+    "@supabase/supabase-js": "^2.117.0",
     "clsx": "^2.1.1",
     "lucide-react": "^0.453.0",
     "next": "^14.2.35",
     "react": "^18.3.1",
     "react-dom": "^18.3.1",
-    "tailwind-merge": "^3.7.0",
-    "tinacms": "^3.14.1"
+    "tailwind-merge": "^3.7.0"
   },
   "devDependencies": {
     "@types/node": "^22.20.3",

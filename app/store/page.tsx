@@ -1,7 +1,7 @@
 import React from "react";
 import { Metadata } from "next";
-import client from "@/tina/__generated__/client";
-import { getProducts, TinaProduct, extractPlainText } from "@/lib/content";
+import { supabaseServer, isSupabaseConfigured } from "@/lib/supabaseServer";
+import { getProducts, Product } from "@/lib/content";
 import StoreCatalog from "@/components/store/StoreCatalog";
 
 export const metadata: Metadata = {
@@ -10,61 +10,52 @@ export const metadata: Metadata = {
     "Buy sealed 1.75mm 3D printing filament with same-day local pickup in Bangor and Slate Belt, PA. Overture PLA and specialty filaments.",
 };
 
+export const revalidate = 60; // ISR fallback revalidation
+
 export default async function StorePage() {
-  let products: TinaProduct[] = [];
+  let products: Product[] = [];
 
-  try {
-    // 1. Data Fetching: fetch productsConnection from Tina client
-    const res = await client.queries.productsConnection({});
-    const edges = res?.data?.productsConnection?.edges || [];
+  if (isSupabaseConfigured()) {
+    try {
+      // Fetch products from the products table where in_stock = true
+      const { data, error } = await supabaseServer
+        .from("products")
+        .select("*")
+        .eq("in_stock", true)
+        .order("created_at", { ascending: false });
 
-    // Map over the edges/nodes returned by the GraphQL response
-    for (const edge of edges) {
-      const node = edge?.node;
-      if (!node) continue;
+    if (!error && data && data.length > 0) {
+      products = data.map((row: any) => {
+        const title = row.title || "Untitled Spool";
+        let image = row.image || "/uploads/overture-spool.png";
 
-      const slug = node._sys?.filename || node.id;
-      // 2. UI Rendering: filter to only display products where inStock is true
-      const inStock = node.inStock === true;
-      if (!inStock) continue;
-
-      // Ensure image src correctly points to /uploads path that Tina uses
-      let image = node.image || "/uploads/overture-spool.png";
-      if (image.startsWith("uploads/")) {
-        image = `/${image}`;
-      } else if (!image.startsWith("/") && !image.startsWith("http")) {
-        image = `/uploads/${image}`;
-      }
-
-      const title = node.title || "Untitled Spool";
-      const plainDesc = extractPlainText(node.description);
-
-      products.push({
-        slug,
-        title,
-        description: node.description,
-        plainDescription: plainDesc,
-        price: typeof node.price === "number" ? node.price : 24.99,
-        category: node.category || "PLA",
-        inStock,
-        image,
-        colorName:
-          title
-            .replace(/Overture\s+/i, "")
-            .replace(/\s+PLA.*$/i, "")
-            .replace(/\s+Spool.*$/i, "") || "Standard",
-        colorHex: "#1e293b",
-        diameter: "1.75 mm",
-        weight: "1.0 kg (2.2 lbs)",
-        isPopular: false,
+        return {
+          slug: String(row.id || title.toLowerCase().replace(/[^a-z0-9]/g, "-")),
+          title,
+          plainDescription: row.description || `High-quality ${row.category || "PLA"} 3D printing filament.`,
+          price: typeof row.price === "number" ? row.price : parseFloat(row.price) || 24.99,
+          category: row.category || "PLA",
+          inStock: true,
+          image,
+          colorName:
+            title
+              .replace(/Overture\s+/i, "")
+              .replace(/\s+PLA.*$/i, "")
+              .replace(/\s+Spool.*$/i, "")
+              .trim() || "Standard",
+          colorHex: row.colorHex || "#1e293b",
+          diameter: row.diameter || "1.75 mm",
+          weight: row.weight || "1.0 kg (2.2 lbs)",
+          isPopular: Boolean(row.isPopular),
+        };
       });
+      }
+    } catch (err) {
+      console.warn("Could not load products from Supabase, falling back to local:", err);
     }
-  } catch {
-    // Graceful fallback during static build/first build before local server is live
-    products = getProducts().filter((p) => p.inStock === true);
   }
 
-  // Fallback to local file inventory if GraphQL returned empty
+  // Graceful fallback to local file inventory if Supabase table is empty or uninitialized
   if (products.length === 0) {
     products = getProducts().filter((p) => p.inStock === true);
   }

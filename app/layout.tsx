@@ -3,6 +3,7 @@ import "./globals.css";
 import Navbar from "@/components/layout/Navbar";
 import Footer from "@/components/layout/Footer";
 import { siteConfig } from "@/config/site";
+import { getSiteContentData } from "@/lib/actions/admin";
 
 export const metadata: Metadata = {
   title: {
@@ -76,11 +77,18 @@ const jsonLdSchema = {
   ],
 };
 
-export default function RootLayout({
+export default async function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  let siteContent;
+  try {
+    siteContent = await getSiteContentData();
+  } catch {
+    // Falls back gracefully
+  }
+
   return (
     <html lang="en" className="scroll-smooth">
       <head>
@@ -92,7 +100,7 @@ export default function RootLayout({
       <body className="min-h-screen bg-white text-slate-900 flex flex-col antialiased selection:bg-blue-600 selection:text-white">
         <Navbar />
         <main className="flex-grow">{children}</main>
-        <Footer />
+        <Footer content={siteContent} />
       </body>
     </html>
   );

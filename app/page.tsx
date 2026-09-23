@@ -4,17 +4,19 @@ import EquipmentShowcase from "@/components/home/EquipmentShowcase";
 import FilamentBanner from "@/components/home/FilamentBanner";
 import Testimonials from "@/components/home/Testimonials";
 import CtaBanner from "@/components/home/CtaBanner";
-import client from "@/tina/__generated__/client";
-import { getSiteContent } from "@/lib/content";
+import { getSiteContentData } from "@/lib/actions/admin";
+import { getSiteContent, defaultSiteContent } from "@/lib/content";
+
+export const revalidate = 60; // ISR fallback revalidation
 
 export default async function HomePage() {
-  // Fallbacks in case CMS data returns null during initial build or before save
+  const diskFallback = getSiteContent();
+
   const fallback = {
-    heroHeadline: "Precision 3D Printing & Scanning",
-    heroSubtitle:
-      "Local 3D scanning down to 0.02mm precision and rapid additive manufacturing in Bangor, PA. Zero shipping risks, fast local pickup, and personal engineering support.",
-    phoneNumber: "(610) 555-0199",
-    bangorAddress: "Bangor, PA 18013 | Slate Belt Region",
+    heroHeadline: diskFallback.heroHeadline || defaultSiteContent.heroHeadline,
+    heroSubtitle: diskFallback.heroSubtitle || defaultSiteContent.heroSubtitle,
+    phoneNumber: diskFallback.phoneNumber || defaultSiteContent.phone,
+    bangorAddress: diskFallback.bangorAddress || defaultSiteContent.address,
   };
 
   let heroHeadline = fallback.heroHeadline;
@@ -23,22 +25,16 @@ export default async function HomePage() {
   let bangorAddress = fallback.bangorAddress;
 
   try {
-    // Fetch live data server-side from TinaCMS client query
-    const res = await client.queries.site_content({ relativePath: "home.json" });
-    if (res?.data?.site_content) {
-      const data = res.data.site_content;
+    // Fetch key-value pairs from Supabase site_content table
+    const data = await getSiteContentData();
+    if (data) {
       heroHeadline = data.heroHeadline || fallback.heroHeadline;
       heroSubtitle = data.heroSubtitle || fallback.heroSubtitle;
-      phoneNumber = data.phoneNumber || fallback.phoneNumber;
-      bangorAddress = data.bangorAddress || fallback.bangorAddress;
+      phoneNumber = data.phone || fallback.phoneNumber;
+      bangorAddress = data.address || fallback.bangorAddress;
     }
-  } catch {
-    // Fallback gracefully during static generation/offline build to local content file
-    const disk = getSiteContent();
-    heroHeadline = disk.heroHeadline || fallback.heroHeadline;
-    heroSubtitle = disk.heroSubtitle || fallback.heroSubtitle;
-    phoneNumber = disk.phoneNumber || fallback.phoneNumber;
-    bangorAddress = disk.bangorAddress || fallback.bangorAddress;
+  } catch (err) {
+    console.error("Error fetching site content from Supabase in HomePage:", err);
   }
 
   return (

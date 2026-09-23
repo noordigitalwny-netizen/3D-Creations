@@ -1,7 +1,7 @@
 import fs from "fs";
 import path from "path";
 
-export interface TinaProduct {
+export interface Product {
   slug: string;
   title: string;
   description?: any;
@@ -17,6 +17,8 @@ export interface TinaProduct {
   isPopular?: boolean;
 }
 
+export type TinaProduct = Product;
+
 export interface SiteContent {
   heroHeadline: string;
   heroSubtitle: string;
@@ -25,6 +27,14 @@ export interface SiteContent {
   phoneNumber: string;
   businessHours: string;
 }
+
+export const defaultSiteContent = {
+  heroHeadline: "Metrology-Grade 3D Scanning & Multi-Color 3D Printing",
+  heroSubtitle:
+    "Local 3D scanning down to 0.02mm precision and rapid additive manufacturing in Bangor, PA. Zero shipping risks, fast local pickup, and personal engineering support.",
+  phone: "(610) 555-0199",
+  address: "Bangor, PA 18013 | Slate Belt Region",
+};
 
 export function extractPlainText(desc: any): string {
   if (!desc) return "";
@@ -41,7 +51,7 @@ export function extractPlainText(desc: any): string {
   return "";
 }
 
-export function getProducts(): TinaProduct[] {
+export function getProducts(): Product[] {
   const productsDir = path.join(process.cwd(), "content", "products");
   if (!fs.existsSync(productsDir)) return [];
 

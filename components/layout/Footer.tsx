@@ -11,12 +11,24 @@ import {
 } from "lucide-react";
 
 interface FooterProps {
-  content?: SiteContent;
+  content?: {
+    bangorAddress?: string;
+    address?: string;
+    phoneNumber?: string;
+    phone?: string;
+    businessHours?: string;
+  };
 }
 
 export default function Footer({ content }: FooterProps) {
   const currentYear = new Date().getFullYear();
-  const siteContent = content || getSiteContent();
+  const defaultContent = getSiteContent();
+  const siteContent = {
+    ...defaultContent,
+    bangorAddress: content?.bangorAddress || content?.address || defaultContent.bangorAddress,
+    phoneNumber: content?.phoneNumber || content?.phone || defaultContent.phoneNumber,
+    businessHours: content?.businessHours || defaultContent.businessHours,
+  };
 
   return (
     <footer className="bg-slate-900 text-slate-300 pt-16 pb-12 border-t border-slate-800">

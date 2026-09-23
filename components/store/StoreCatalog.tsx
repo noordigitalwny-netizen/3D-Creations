@@ -3,11 +3,11 @@
 import React, { useState } from "react";
 import Link from "next/link";
 import Image from "next/image";
-import { TinaProduct } from "@/lib/content";
+import { Product } from "@/lib/content";
 import { CheckCircle2, ShoppingBag, Filter } from "lucide-react";
 
 interface StoreCatalogProps {
-  products: TinaProduct[];
+  products: Product[];
 }
 
 export default function StoreCatalog({ products }: StoreCatalogProps) {

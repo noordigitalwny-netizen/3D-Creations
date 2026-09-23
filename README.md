@@ -57,7 +57,7 @@ All site content, pricing logic, products, and metadata are 100% customizable vi
 | **Pricing Logic & Rates** | [`lib/pricing.ts`](lib/pricing.ts) | Adjust hourly machine rates (`hourlyMachineRate`), material cost/gram (`materialCostPerGram`), setup fee, and scanning base fees. |
 | **Filament Store Stock** | [`data/products.ts`](data/products.ts) | Update local spool inventory, stock counts, colors, materials, and prices. |
 | **Project Gallery** | [`data/gallery.ts`](data/gallery.ts) | Manage showcase images, categories, and tags. |
-| **Visual CMS Admin** | [`tina/config.ts`](tina/config.ts) | TinaCMS schema definitions for `products` and `site_content`. |
+| **Admin Portal** | [`/admin`](/admin) | Internal admin dashboard backed by Supabase for product inventory, image uploads, and site copy updates. |
 
 ---
 
