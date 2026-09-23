@@ -120,8 +120,14 @@ export async function saveProductAction(formData: FormData) {
         });
 
       if (uploadError) {
-        console.warn("Storage upload warning:", uploadError.message);
-      } else if (uploadData) {
+        console.error("Storage upload error:", uploadError.message);
+        return {
+          success: false,
+          error: `Image upload failed: ${uploadError.message}. Please verify the 'product-images' bucket exists in Supabase with public read access.`,
+        };
+      }
+
+      if (uploadData) {
         const { data: urlData } = supabaseServer.storage
           .from("product-images")
           .getPublicUrl(cleanFileName);

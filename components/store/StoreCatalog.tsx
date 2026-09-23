@@ -116,10 +116,13 @@ export default function StoreCatalog({ products }: StoreCatalogProps) {
             {/* Responsive Product Catalog Grid */}
             <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 sm:gap-6">
               {filteredProducts.map((product) => {
-                // Ensure image src correctly points to /uploads path
-                const imgSrc = product.image.startsWith("/")
-                  ? product.image
-                  : `/${product.image}`;
+                // Ensure full remote URLs (e.g. Supabase storage) and local paths are handled correctly
+                const imgSrc =
+                  product.image.startsWith("http://") || product.image.startsWith("https://")
+                    ? product.image
+                    : product.image.startsWith("/")
+                    ? product.image
+                    : `/${product.image}`;
 
                 return (
                   <div
