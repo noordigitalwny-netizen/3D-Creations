@@ -103,10 +103,48 @@ function ContactFormInner() {
     setSubmitting(true);
 
     try {
-      await new Promise((resolve) => setTimeout(resolve, 1000));
-      setSubmittedSuccess(true);
+      const fileNames = uploadedFiles.map((f) => f.name).join(", ");
+      const accessKey =
+        process.env.NEXT_PUBLIC_WEB3FORMS_ACCESS_KEY ||
+        "6e8ee156-1d13-4e7e-a9e8-6a65c1952042";
+
+      const payload = {
+        access_key: accessKey,
+        subject: `New Project Quote Inquiry from ${formData.name}`,
+        from_name: formData.name,
+        name: formData.name,
+        email: formData.email,
+        phone: formData.phone,
+        service_needed: formData.serviceNeeded,
+        pickup_preference: formData.pickupPreference,
+        message: formData.description,
+        attached_files: fileNames || "None attached",
+      };
+
+      const res = await fetch("https://api.web3forms.com/submit", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Accept: "application/json",
+        },
+        body: JSON.stringify(payload),
+      });
+
+      const data = await res.json();
+      if (res.ok && data.success) {
+        setSubmittedSuccess(true);
+      } else {
+        setErrorMessage(
+          data.message ||
+            "Unable to submit quote request. Please call us directly at " +
+              siteConfig.contact.phone
+        );
+      }
     } catch (err) {
-      setErrorMessage("Something went wrong. Please call us directly at " + siteConfig.contact.phone);
+      setErrorMessage(
+        "Something went wrong while submitting. Please call us directly at " +
+          siteConfig.contact.phone
+      );
     } finally {
       setSubmitting(false);
     }
