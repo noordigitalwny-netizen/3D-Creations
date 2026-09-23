@@ -259,8 +259,9 @@ export type Site_Content = Node & Document & {
   __typename?: 'Site_content';
   heroHeadline?: Maybe<Scalars['String']['output']>;
   heroSubtitle?: Maybe<Scalars['String']['output']>;
-  bangorAddress?: Maybe<Scalars['String']['output']>;
+  phone?: Maybe<Scalars['String']['output']>;
   phoneNumber?: Maybe<Scalars['String']['output']>;
+  bangorAddress?: Maybe<Scalars['String']['output']>;
   businessHours?: Maybe<Scalars['String']['output']>;
   id: Scalars['ID']['output'];
   _sys: SystemInfo;
@@ -270,8 +271,9 @@ export type Site_Content = Node & Document & {
 export type Site_ContentFilter = {
   heroHeadline?: InputMaybe<StringFilter>;
   heroSubtitle?: InputMaybe<StringFilter>;
-  bangorAddress?: InputMaybe<StringFilter>;
+  phone?: InputMaybe<StringFilter>;
   phoneNumber?: InputMaybe<StringFilter>;
+  bangorAddress?: InputMaybe<StringFilter>;
   businessHours?: InputMaybe<StringFilter>;
 };
 
@@ -381,8 +383,9 @@ export type ProductsMutation = {
 export type Site_ContentMutation = {
   heroHeadline?: InputMaybe<Scalars['String']['input']>;
   heroSubtitle?: InputMaybe<Scalars['String']['input']>;
-  bangorAddress?: InputMaybe<Scalars['String']['input']>;
+  phone?: InputMaybe<Scalars['String']['input']>;
   phoneNumber?: InputMaybe<Scalars['String']['input']>;
+  bangorAddress?: InputMaybe<Scalars['String']['input']>;
   businessHours?: InputMaybe<Scalars['String']['input']>;
 };
 
@@ -433,14 +436,15 @@ export type ProductsFilter = {
 export type Site_ContentFilter = {
   heroHeadline?: StringFilter | null | undefined;
   heroSubtitle?: StringFilter | null | undefined;
-  bangorAddress?: StringFilter | null | undefined;
+  phone?: StringFilter | null | undefined;
   phoneNumber?: StringFilter | null | undefined;
+  bangorAddress?: StringFilter | null | undefined;
   businessHours?: StringFilter | null | undefined;
 };
 
 export type ProductsPartsFragment = { __typename: 'Products', title: string, description: TinaMarkdownContent | null, price: number | null, category: string | null, inStock: boolean | null, image: string | null };
 
-export type Site_ContentPartsFragment = { __typename: 'Site_content', heroHeadline: string | null, heroSubtitle: string | null, bangorAddress: string | null, phoneNumber: string | null, businessHours: string | null };
+export type Site_ContentPartsFragment = { __typename: 'Site_content', heroHeadline: string | null, heroSubtitle: string | null, phone: string | null, phoneNumber: string | null, bangorAddress: string | null, businessHours: string | null };
 
 export type ProductsQueryVariables = Exact<{
   relativePath: string;
@@ -466,7 +470,7 @@ export type Site_ContentQueryVariables = Exact<{
 }>;
 
 
-export type Site_ContentQuery = { site_content: { __typename: 'Site_content', id: string, heroHeadline: string | null, heroSubtitle: string | null, bangorAddress: string | null, phoneNumber: string | null, businessHours: string | null, _sys: { filename: string, basename: string, hasReferences: boolean | null, breadcrumbs: Array<string>, path: string, relativePath: string, extension: string } } };
+export type Site_ContentQuery = { site_content: { __typename: 'Site_content', id: string, heroHeadline: string | null, heroSubtitle: string | null, phone: string | null, phoneNumber: string | null, bangorAddress: string | null, businessHours: string | null, _sys: { filename: string, basename: string, hasReferences: boolean | null, breadcrumbs: Array<string>, path: string, relativePath: string, extension: string } } };
 
 export type Site_ContentConnectionQueryVariables = Exact<{
   before?: string | null | undefined;
@@ -478,7 +482,7 @@ export type Site_ContentConnectionQueryVariables = Exact<{
 }>;
 
 
-export type Site_ContentConnectionQuery = { site_contentConnection: { totalCount: number, pageInfo: { hasPreviousPage: boolean, hasNextPage: boolean, startCursor: string, endCursor: string }, edges: Array<{ cursor: string, node: { __typename: 'Site_content', id: string, heroHeadline: string | null, heroSubtitle: string | null, bangorAddress: string | null, phoneNumber: string | null, businessHours: string | null, _sys: { filename: string, basename: string, hasReferences: boolean | null, breadcrumbs: Array<string>, path: string, relativePath: string, extension: string } } | null } | null> | null } };
+export type Site_ContentConnectionQuery = { site_contentConnection: { totalCount: number, pageInfo: { hasPreviousPage: boolean, hasNextPage: boolean, startCursor: string, endCursor: string }, edges: Array<{ cursor: string, node: { __typename: 'Site_content', id: string, heroHeadline: string | null, heroSubtitle: string | null, phone: string | null, phoneNumber: string | null, bangorAddress: string | null, businessHours: string | null, _sys: { filename: string, basename: string, hasReferences: boolean | null, breadcrumbs: Array<string>, path: string, relativePath: string, extension: string } } | null } | null> | null } };
 
 export const ProductsPartsFragmentDoc = gql`
     fragment ProductsParts on Products {
@@ -496,8 +500,9 @@ export const Site_ContentPartsFragmentDoc = gql`
   __typename
   heroHeadline
   heroSubtitle
-  bangorAddress
+  phone
   phoneNumber
+  bangorAddress
   businessHours
 }
     `;

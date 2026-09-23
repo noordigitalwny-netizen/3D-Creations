@@ -163,8 +163,9 @@ type ProductsConnection implements Connection {
 type Site_content implements Node & Document {
   heroHeadline: String
   heroSubtitle: String
-  bangorAddress: String
+  phone: String
   phoneNumber: String
+  bangorAddress: String
   businessHours: String
   id: ID!
   _sys: SystemInfo!
@@ -174,8 +175,9 @@ type Site_content implements Node & Document {
 input Site_contentFilter {
   heroHeadline: StringFilter
   heroSubtitle: StringFilter
-  bangorAddress: StringFilter
+  phone: StringFilter
   phoneNumber: StringFilter
+  bangorAddress: StringFilter
   businessHours: StringFilter
 }
 
@@ -225,8 +227,9 @@ input ProductsMutation {
 input Site_contentMutation {
   heroHeadline: String
   heroSubtitle: String
-  bangorAddress: String
+  phone: String
   phoneNumber: String
+  bangorAddress: String
   businessHours: String
 }
 

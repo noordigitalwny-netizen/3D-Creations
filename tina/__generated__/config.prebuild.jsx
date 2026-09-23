@@ -90,13 +90,18 @@ var config_default = defineConfig({
           },
           {
             type: "string",
-            name: "bangorAddress",
-            label: "Bangor Address"
+            name: "phone",
+            label: "Phone"
           },
           {
             type: "string",
             name: "phoneNumber",
             label: "Phone Number"
+          },
+          {
+            type: "string",
+            name: "bangorAddress",
+            label: "Bangor Address"
           },
           {
             type: "string",

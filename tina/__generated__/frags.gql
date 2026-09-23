@@ -12,7 +12,8 @@ fragment Site_contentParts on Site_content {
   __typename
   heroHeadline
   heroSubtitle
-  bangorAddress
+  phone
   phoneNumber
+  bangorAddress
   businessHours
 }

@@ -21,8 +21,9 @@ export const Site_ContentPartsFragmentDoc = gql`
   __typename
   heroHeadline
   heroSubtitle
-  bangorAddress
+  phone
   phoneNumber
+  bangorAddress
   businessHours
 }
     `;

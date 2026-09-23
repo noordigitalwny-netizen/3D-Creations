@@ -21,6 +21,7 @@ export interface SiteContent {
   heroHeadline: string;
   heroSubtitle: string;
   bangorAddress: string;
+  phone?: string;
   phoneNumber: string;
   businessHours: string;
 }
@@ -110,7 +111,8 @@ export function getSiteContent(): SiteContent {
       heroHeadline: data.heroHeadline || fallback.heroHeadline,
       heroSubtitle: data.heroSubtitle || fallback.heroSubtitle,
       bangorAddress: data.bangorAddress || fallback.bangorAddress,
-      phoneNumber: data.phoneNumber || fallback.phoneNumber,
+      phone: data.phone || data.phoneNumber || fallback.phoneNumber,
+      phoneNumber: data.phoneNumber || data.phone || fallback.phoneNumber,
       businessHours: data.businessHours || fallback.businessHours,
     };
   } catch (err) {
