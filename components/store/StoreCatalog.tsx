@@ -4,7 +4,7 @@ import React, { useState } from "react";
 import Link from "next/link";
 import Image from "next/image";
 import { Product } from "@/lib/content";
-import { CheckCircle2, ShoppingBag, Filter } from "lucide-react";
+import { CheckCircle2, ShoppingBag, Filter, XCircle, Clock } from "lucide-react";
 
 interface StoreCatalogProps {
   products: Product[];
@@ -14,13 +14,10 @@ export default function StoreCatalog({ products }: StoreCatalogProps) {
   const [selectedCategory, setSelectedCategory] = useState<string>("All");
   const [selectedColor, setSelectedColor] = useState<string>("All");
 
-  // Only products where inStock is true are displayed
-  const inStockProducts = products.filter((p) => p.inStock === true);
+  const categories = ["All", ...Array.from(new Set(products.map((p) => p.category)))];
+  const colors = ["All", ...Array.from(new Set(products.map((p) => p.colorName)))];
 
-  const categories = ["All", ...Array.from(new Set(inStockProducts.map((p) => p.category)))];
-  const colors = ["All", ...Array.from(new Set(inStockProducts.map((p) => p.colorName)))];
-
-  const filteredProducts = inStockProducts.filter((p) => {
+  const filteredProducts = products.filter((p) => {
     const matchCat = selectedCategory === "All" || p.category === selectedCategory;
     const matchCol = selectedColor === "All" || p.colorName === selectedColor;
     return matchCat && matchCol;
@@ -43,7 +40,7 @@ export default function StoreCatalog({ products }: StoreCatalogProps) {
         </div>
 
         {/* Empty State when database/products array is empty */}
-        {inStockProducts.length === 0 ? (
+        {products.length === 0 ? (
           <div className="text-center py-16 px-6 bg-white rounded-lg border border-gray-200 space-y-4 max-w-xl mx-auto shadow-sm">
             <div className="w-14 h-14 rounded-full bg-blue-50 border border-blue-200 text-blue-600 flex items-center justify-center mx-auto">
               <ShoppingBag className="w-7 h-7" />
@@ -124,16 +121,31 @@ export default function StoreCatalog({ products }: StoreCatalogProps) {
                     ? product.image
                     : `/${product.image}`;
 
+                const inStock = product.inStock !== false;
+
                 return (
                   <div
                     key={product.slug}
-                    className="rounded-lg bg-white border border-gray-200 p-4 sm:p-5 flex flex-col justify-between hover:border-blue-500 transition-all duration-200 shadow-sm relative group"
+                    className={`rounded-lg bg-white border p-4 sm:p-5 flex flex-col justify-between transition-all duration-200 shadow-sm relative group ${
+                      inStock ? "border-gray-200 hover:border-blue-500" : "border-slate-200 bg-slate-50/40"
+                    }`}
                   >
-                    {product.isPopular && (
-                      <span className="absolute top-3 right-3 text-[9px] font-bold uppercase tracking-wider bg-blue-600 text-white px-2 py-0.5 rounded font-mono z-10">
-                        Popular
-                      </span>
-                    )}
+                    {/* Status Badges */}
+                    <div className="absolute top-3 left-3 right-3 flex items-center justify-between pointer-events-none z-10">
+                      {!inStock ? (
+                        <span className="text-[10px] font-bold uppercase tracking-wider bg-slate-700/90 text-white px-2 py-0.5 rounded font-mono shadow-xs backdrop-blur-xs">
+                          Out of Stock
+                        </span>
+                      ) : (
+                        <span />
+                      )}
+
+                      {product.isPopular && inStock && (
+                        <span className="text-[9px] font-bold uppercase tracking-wider bg-blue-600 text-white px-2 py-0.5 rounded font-mono shadow-xs">
+                          Popular
+                        </span>
+                      )}
+                    </div>
 
                     <div>
                       {/* Product Image Preview Card */}
@@ -144,7 +156,9 @@ export default function StoreCatalog({ products }: StoreCatalogProps) {
                             alt={product.title}
                             width={120}
                             height={120}
-                            className="object-contain max-h-20 sm:max-h-24 drop-shadow-sm transition-transform duration-300 group-hover:scale-105"
+                            className={`object-contain max-h-20 sm:max-h-24 drop-shadow-sm transition-all duration-300 group-hover:scale-105 ${
+                              !inStock ? "opacity-60 grayscale" : ""
+                            }`}
                           />
                         </div>
                         <div className="flex items-center space-x-1.5 mt-1 bg-white/90 backdrop-blur-xs px-2 py-0.5 rounded-full border border-gray-200">
@@ -162,7 +176,9 @@ export default function StoreCatalog({ products }: StoreCatalogProps) {
                         <div className="text-[10px] font-mono font-bold text-blue-600 uppercase tracking-wider">
                           {product.category}
                         </div>
-                        <h3 className="text-sm sm:text-base font-bold text-slate-900 leading-tight group-hover:text-blue-600 transition-colors">
+                        <h3 className={`text-sm sm:text-base font-bold leading-tight transition-colors ${
+                          inStock ? "text-slate-900 group-hover:text-blue-600" : "text-slate-700"
+                        }`}>
                           {product.title}
                         </h3>
                         {product.plainDescription ? (
@@ -183,9 +199,15 @@ export default function StoreCatalog({ products }: StoreCatalogProps) {
                         </div>
                         <div className="flex justify-between items-center pt-1">
                           <span>Stock:</span>
-                          <span className="text-emerald-700 font-bold flex items-center gap-1">
-                            <CheckCircle2 className="w-3 h-3 text-emerald-600" /> In Stock
-                          </span>
+                          {inStock ? (
+                            <span className="text-emerald-700 font-bold flex items-center gap-1">
+                              <CheckCircle2 className="w-3 h-3 text-emerald-600" /> In Stock
+                            </span>
+                          ) : (
+                            <span className="text-rose-600 font-bold flex items-center gap-1">
+                              <XCircle className="w-3 h-3 text-rose-500" /> Out of Stock
+                            </span>
+                          )}
                         </div>
                       </div>
                     </div>
@@ -195,15 +217,27 @@ export default function StoreCatalog({ products }: StoreCatalogProps) {
                         ${product.price.toFixed(2)}
                       </div>
 
-                      <Link
-                        href={`/contact?reserve=${product.slug}&productName=${encodeURIComponent(
-                          product.title
-                        )}`}
-                        className="w-full flex items-center justify-center space-x-1.5 py-2.5 px-3 text-xs font-bold text-white bg-blue-600 hover:bg-blue-700 rounded-md transition-colors touch-target-min"
-                      >
-                        <ShoppingBag className="w-3.5 h-3.5" />
-                        <span>Reserve for Pickup</span>
-                      </Link>
+                      {inStock ? (
+                        <Link
+                          href={`/contact?reserve=${product.slug}&productName=${encodeURIComponent(
+                            product.title
+                          )}`}
+                          className="w-full flex items-center justify-center space-x-1.5 py-2.5 px-3 text-xs font-bold text-white bg-blue-600 hover:bg-blue-700 rounded-md transition-colors touch-target-min shadow-xs"
+                        >
+                          <ShoppingBag className="w-3.5 h-3.5" />
+                          <span>Reserve for Pickup</span>
+                        </Link>
+                      ) : (
+                        <Link
+                          href={`/contact?requestStock=${product.slug}&productName=${encodeURIComponent(
+                            product.title
+                          )}`}
+                          className="w-full flex items-center justify-center space-x-1.5 py-2.5 px-3 text-xs font-bold text-slate-700 bg-slate-100 hover:bg-slate-200 rounded-md transition-colors touch-target-min border border-slate-300"
+                        >
+                          <Clock className="w-3.5 h-3.5 text-slate-500" />
+                          <span>Request Restock</span>
+                        </Link>
+                      )}
                     </div>
                   </div>
                 );

@@ -17,38 +17,38 @@ export default async function StorePage() {
 
   if (isSupabaseConfigured()) {
     try {
-      // Fetch products from the products table where in_stock = true
+      // Fetch all products from the products table (including out of stock)
       const { data, error } = await supabaseServer
         .from("products")
         .select("*")
-        .eq("in_stock", true)
         .order("created_at", { ascending: false });
 
-    if (!error && data && data.length > 0) {
-      products = data.map((row: any) => {
-        const title = row.title || "Untitled Spool";
-        let image = row.image || "/uploads/overture-spool.png";
+      if (!error && data && data.length > 0) {
+        products = data.map((row: any) => {
+          const title = row.title || "Untitled Spool";
+          let image = row.image || "/uploads/overture-spool.png";
+          const inStock = row.in_stock !== false && row.inStock !== false;
 
-        return {
-          slug: String(row.id || title.toLowerCase().replace(/[^a-z0-9]/g, "-")),
-          title,
-          plainDescription: row.description || `High-quality ${row.category || "PLA"} 3D printing filament.`,
-          price: typeof row.price === "number" ? row.price : parseFloat(row.price) || 24.99,
-          category: row.category || "PLA",
-          inStock: true,
-          image,
-          colorName:
-            title
-              .replace(/Overture\s+/i, "")
-              .replace(/\s+PLA.*$/i, "")
-              .replace(/\s+Spool.*$/i, "")
-              .trim() || "Standard",
-          colorHex: row.colorHex || "#1e293b",
-          diameter: row.diameter || "1.75 mm",
-          weight: row.weight || "1.0 kg (2.2 lbs)",
-          isPopular: Boolean(row.isPopular),
-        };
-      });
+          return {
+            slug: String(row.id || title.toLowerCase().replace(/[^a-z0-9]/g, "-")),
+            title,
+            plainDescription: row.description || `High-quality ${row.category || "PLA"} 3D printing filament.`,
+            price: typeof row.price === "number" ? row.price : parseFloat(row.price) || 24.99,
+            category: row.category || "PLA",
+            inStock,
+            image,
+            colorName:
+              title
+                .replace(/Overture\s+/i, "")
+                .replace(/\s+PLA.*$/i, "")
+                .replace(/\s+Spool.*$/i, "")
+                .trim() || "Standard",
+            colorHex: row.colorHex || "#1e293b",
+            diameter: row.diameter || "1.75 mm",
+            weight: row.weight || "1.0 kg (2.2 lbs)",
+            isPopular: Boolean(row.isPopular),
+          };
+        });
       }
     } catch (err) {
       console.warn("Could not load products from Supabase, falling back to local:", err);
@@ -57,7 +57,7 @@ export default async function StorePage() {
 
   // Graceful fallback to local file inventory if Supabase table is empty or uninitialized
   if (products.length === 0) {
-    products = getProducts().filter((p) => p.inStock === true);
+    products = getProducts();
   }
 
   return <StoreCatalog products={products} />;

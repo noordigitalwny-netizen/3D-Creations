@@ -66,10 +66,6 @@ export function getProducts(): Product[] {
       const slug = file.replace(/\.json$/, "");
 
       const inStock = data.inStock !== false && data.in_stock !== false;
-      // Filter out any products where in_stock is false
-      if (!inStock) {
-        continue;
-      }
 
       products.push({
         slug,
@@ -78,7 +74,7 @@ export function getProducts(): Product[] {
         plainDescription: extractPlainText(data.description),
         price: typeof data.price === "number" ? data.price : 24.99,
         category: data.category || "PLA",
-        inStock: true,
+        inStock,
         image: data.image || "/uploads/overture-spool.png",
         colorName:
           data.colorName ||
