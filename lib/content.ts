@@ -32,7 +32,7 @@ export const defaultSiteContent = {
   heroHeadline: "Metrology-Grade 3D Scanning & Multi-Color 3D Printing",
   heroSubtitle:
     "Local 3D scanning down to 0.02mm precision and rapid additive manufacturing in Bangor, PA. Zero shipping risks, fast local pickup, and personal engineering support.",
-  phone: "(610) 555-0199",
+  phone: "(570) 243-1673",
   address: "Bangor, PA 18013 | Slate Belt Region",
 };
 
@@ -104,7 +104,7 @@ export function getSiteContent(): SiteContent {
     heroSubtitle:
       "Local 3D scanning down to 0.02mm precision and rapid additive manufacturing in Bangor, PA. Zero shipping risks, fast local pickup, and personal engineering support.",
     bangorAddress: "Bangor, PA 18013 | Slate Belt Region",
-    phoneNumber: "(610) 555-0199",
+    phoneNumber: "(570) 243-1673",
     businessHours: "Mon - Fri: 8:00 AM - 6:00 PM | Sat: By Appointment",
   };
 

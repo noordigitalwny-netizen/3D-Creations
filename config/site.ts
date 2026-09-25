@@ -61,8 +61,8 @@ export const siteConfig: SiteConfig = {
   },
 
   contact: {
-    phone: "(610) 555-0199",
-    phoneRaw: "+16105550199",
+    phone: "(570) 243-1673",
+    phoneRaw: "+15702431673",
     email: "info@3dcreationspa.com",
     hours: "Mon - Fri: 8:00 AM - 6:00 PM | Sat: By Appointment",
   },

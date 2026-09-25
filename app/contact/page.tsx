@@ -166,7 +166,7 @@ function ContactFormInner() {
                 <input
                   type="tel"
                   required
-                  placeholder="(610) 555-0199"
+                  placeholder="(570) 243-1673"
                   value={formData.phone}
                   onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
                   className="w-full h-11 px-4 bg-white text-sm text-slate-900 border border-gray-300 rounded-md focus:outline-none focus:border-blue-600 touch-target-min"

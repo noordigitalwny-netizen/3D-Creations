@@ -22,3 +22,15 @@ export const supabaseServer = createClient(supabaseUrl, supabaseKey, {
     autoRefreshToken: false,
   },
 });
+
+/**
+ * Fallback / seed defaults for Supabase site content
+ */
+export const defaultSiteSeedData = {
+  heroHeadline: "Metrology-Grade 3D Scanning & Multi-Color 3D Printing",
+  heroSubtitle:
+    "Local 3D scanning down to 0.02mm precision and rapid additive manufacturing in Bangor, PA. Zero shipping risks, fast local pickup, and personal engineering support.",
+  phone: "(570) 243-1673",
+  phoneRaw: "+15702431673",
+  address: "Bangor, PA 18013 | Slate Belt Region",
+};

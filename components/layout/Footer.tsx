@@ -104,12 +104,24 @@ export default function Footer({ content }: FooterProps) {
               </div>
               <div className="flex items-center space-x-2.5">
                 <Phone className="w-4 h-4 text-blue-400 shrink-0" />
-                <a
-                  href={`tel:${(siteContent.phoneNumber || siteConfig.contact.phone).replace(/[^0-9+]/g, "")}`}
-                  className="hover:text-white transition-colors text-slate-300 font-medium"
-                >
-                  {siteContent.phoneNumber || siteConfig.contact.phone}
-                </a>
+                {(() => {
+                  const phoneText = siteContent.phoneNumber || siteContent.phone || siteConfig.contact.phone;
+                  const digits = phoneText.replace(/[^0-9]/g, "");
+                  const phoneHref =
+                    digits.length === 10
+                      ? `+1${digits}`
+                      : phoneText.startsWith("+")
+                      ? phoneText.replace(/[^0-9+]/g, "")
+                      : `+${digits}`;
+                  return (
+                    <a
+                      href={`tel:${phoneHref}`}
+                      className="hover:text-white transition-colors text-slate-300 font-medium"
+                    >
+                      {phoneText}
+                    </a>
+                  );
+                })()}
               </div>
               <div className="flex items-center space-x-2.5">
                 <Mail className="w-4 h-4 text-blue-400 shrink-0" />

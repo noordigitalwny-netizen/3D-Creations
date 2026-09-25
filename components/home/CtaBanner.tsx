@@ -12,7 +12,13 @@ export default function CtaBanner({
   phone = siteConfig.contact.phone,
   address = siteConfig.location.fullFormatted,
 }: CtaBannerProps) {
-  const phoneRaw = phone.replace(/[^0-9+]/g, "");
+  const digits = phone.replace(/[^0-9]/g, "");
+  const phoneRaw =
+    digits.length === 10
+      ? `+1${digits}`
+      : phone.startsWith("+")
+      ? phone.replace(/[^0-9+]/g, "")
+      : `+${digits}`;
 
   return (
     <section className="py-16 bg-blue-900 text-white relative overflow-hidden">

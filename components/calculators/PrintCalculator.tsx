@@ -349,7 +349,7 @@ export default function PrintCalculator() {
                       required
                       value={inquiryPhone}
                       onChange={(e) => setInquiryPhone(e.target.value)}
-                      placeholder="(610) 555-0199"
+                      placeholder="(570) 243-1673"
                       className="w-full px-3.5 py-2 text-sm border border-slate-300 rounded-lg focus:ring-2 focus:ring-blue-600 text-slate-900"
                     />
                   </div>

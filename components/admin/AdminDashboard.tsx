@@ -493,7 +493,7 @@ export default function AdminDashboard({
                     name="phone"
                     defaultValue={content.phone}
                     required
-                    placeholder="(610) 555-0199"
+                    placeholder="(570) 243-1673"
                     className="w-full px-3.5 py-2.5 text-sm border border-slate-300 rounded-lg focus:ring-2 focus:ring-blue-600 focus:border-blue-600 text-slate-900"
                   />
                   <p className="text-xs text-slate-500 mt-1">

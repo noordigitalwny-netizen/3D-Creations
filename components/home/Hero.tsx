@@ -13,7 +13,7 @@ export default function Hero({
   headline = "Metrology-Grade 3D Scanning & Multi-Color 3D Printing",
   subtitle = "Local 3D scanning down to 0.02mm precision and rapid additive manufacturing in Bangor, PA. Zero shipping risks, fast local pickup, and personal engineering support.",
   address = "Bangor, PA 18013 | Slate Belt Region",
-  phone = "(610) 555-0199",
+  phone = "(570) 243-1673",
 }: HeroProps) {
   return (
     <section className="relative bg-slate-900 text-white min-h-[520px] lg:min-h-[580px] py-20 lg:py-28 flex items-center justify-center overflow-hidden">
