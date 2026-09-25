@@ -315,19 +315,31 @@ export async function saveLogoAction(formData: FormData) {
 
     const logoUrl = urlData.publicUrl;
 
-    // Try upserting key-value record { key: 'logo', value: logoUrl }
-    const { error: kvError } = await supabaseServer
+    // Save final public URL into site_content where key = 'logo', updating the value column
+    // First try updating existing record with key = 'logo'
+    const { error: updateError, data: updateData } = await supabaseServer
       .from("site_content")
-      .upsert([{ key: "logo", value: logoUrl }], { onConflict: "key" });
+      .update({ value: logoUrl })
+      .eq("key", "logo")
+      .select();
 
-    if (kvError) {
-      console.warn("Key-value logo upsert error, trying columns upsert:", kvError.message);
-      await supabaseServer.from("site_content").upsert({
-        id: 1,
-        logo: logoUrl,
-      });
+    // If update did not match any row or errored, try upserting key-value record { key: 'logo', value: logoUrl }
+    if (updateError || !updateData || updateData.length === 0) {
+      const { error: kvError } = await supabaseServer
+        .from("site_content")
+        .upsert([{ key: "logo", value: logoUrl }], { onConflict: "key" });
+
+      if (kvError) {
+        console.warn("Key-value logo save error, trying columns upsert:", kvError.message);
+        await supabaseServer.from("site_content").upsert({
+          id: 1,
+          logo: logoUrl,
+        });
+      }
     }
 
+    // Critically: revalidate root layout so Next.js immediately displays new logo across all pages
+    revalidatePath("/", "layout");
     revalidatePath("/");
     revalidatePath("/admin");
     return { success: true, url: logoUrl };
@@ -426,59 +438,57 @@ export async function uploadGalleryItemAction(formData: FormData) {
 
     const imageUrl = urlData.publicUrl;
     const itemTitle = title || file.name.replace(/\.[^/.]+$/, "").replace(/[-_]/g, " ");
+    const itemDescription = description || "Custom studio project.";
+    const itemCategory = category || "3D Prints";
 
     let insertedItem: any = null;
 
-    // Schema attempt 1: { image_url, title, category, description }
-    let { data: insData, error: insError } = await supabaseServer
+    // Ensure insert payload includes title, description, and category alongside image_url
+    const insertPayload = {
+      image_url: imageUrl,
+      title: itemTitle,
+      description: itemDescription,
+      category: itemCategory,
+    };
+
+    const { data: insData, error: insError } = await supabaseServer
       .from("gallery")
-      .insert([{
-        image_url: imageUrl,
-        title: itemTitle,
-        category,
-        description: description || "Custom studio project.",
-      }])
+      .insert([insertPayload])
       .select();
 
     if (insError) {
-      // Schema attempt 2: { url, title }
+      console.warn("Primary gallery insert failed, attempting variations:", insError.message);
+      // Fallback variations while always maintaining title, description, category
       const retry1 = await supabaseServer
         .from("gallery")
-        .insert([{ url: imageUrl, title: itemTitle }])
+        .insert([{
+          imageUrl: imageUrl,
+          title: itemTitle,
+          description: itemDescription,
+          category: itemCategory,
+        }])
         .select();
 
-      if (!retry1.error && retry1.data) {
+      if (!retry1.error && retry1.data && retry1.data.length > 0) {
         insertedItem = retry1.data[0];
       } else {
-        // Schema attempt 3: { image, title }
         const retry2 = await supabaseServer
           .from("gallery")
-          .insert([{ image: imageUrl, title: itemTitle }])
+          .insert([{
+            url: imageUrl,
+            title: itemTitle,
+            description: itemDescription,
+            category: itemCategory,
+          }])
           .select();
 
-        if (!retry2.error && retry2.data) {
+        if (!retry2.error && retry2.data && retry2.data.length > 0) {
           insertedItem = retry2.data[0];
         } else {
-          // Schema attempt 4: only image_url
-          const retry3 = await supabaseServer
-            .from("gallery")
-            .insert([{ image_url: imageUrl }])
-            .select();
-
-          if (!retry3.error && retry3.data) {
-            insertedItem = retry3.data[0];
-          } else {
-            const retry4 = await supabaseServer
-              .from("gallery")
-              .insert([{ url: imageUrl }])
-              .select();
-
-            if (!retry4.error && retry4.data) {
-              insertedItem = retry4.data[0];
-            } else {
-              return { success: false, error: `Database insert failed: ${retry4.error?.message || insError.message}` };
-            }
-          }
+          return {
+            success: false,
+            error: `Database insert failed: ${retry2.error?.message || retry1.error?.message || insError.message}`,
+          };
         }
       }
     } else if (insData && insData.length > 0) {
@@ -486,6 +496,7 @@ export async function uploadGalleryItemAction(formData: FormData) {
     }
 
     revalidatePath("/gallery");
+    revalidatePath("/", "layout");
     revalidatePath("/admin");
 
     return {
@@ -493,8 +504,8 @@ export async function uploadGalleryItemAction(formData: FormData) {
       item: {
         id: String(insertedItem?.id || Date.now()),
         title: itemTitle,
-        category,
-        description: description || "Custom studio project.",
+        category: itemCategory,
+        description: itemDescription,
         equipmentUsed: "Bangor Studio Hardware",
         materialOrAccuracy: "High Precision",
         imageUrl,
@@ -521,6 +532,7 @@ export async function deleteGalleryItemAction(id: string) {
     }
 
     revalidatePath("/gallery");
+    revalidatePath("/", "layout");
     revalidatePath("/admin");
     return { success: true };
   } catch (err: any) {

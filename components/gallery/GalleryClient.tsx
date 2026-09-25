@@ -68,30 +68,45 @@ export default function GalleryClient({ initialItems }: GalleryClientProps) {
                 className="rounded-lg bg-white border border-gray-200 overflow-hidden cursor-pointer group hover:shadow-md transition-shadow"
               >
                 {/* Image Preview container */}
-                <div className="relative h-56 w-full bg-gray-100 overflow-hidden">
+                <div className="relative h-60 w-full bg-gray-100 overflow-hidden">
                   <Image
                     src={item.imageUrl || "/uploads/overture-spool.png"}
                     alt={item.title}
                     fill
+                    unoptimized
                     className="object-cover group-hover:scale-105 transition-transform duration-300"
                     sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
                   />
 
-                  <span className="absolute top-3 left-3 text-[10px] font-bold uppercase tracking-wider bg-white/90 text-blue-800 px-2.5 py-1 rounded border border-blue-200 shadow-sm">
+                  {/* Overlaid Category Badge */}
+                  <span className="absolute top-3 left-3 text-[10px] font-bold uppercase tracking-wider bg-white/95 text-blue-800 px-2.5 py-1 rounded-full border border-blue-200 shadow-sm backdrop-blur-xs">
                     {item.category}
                   </span>
 
-                  <div className="absolute bottom-3 right-3 p-2 rounded-md bg-white/90 border border-gray-200 text-slate-700 group-hover:text-blue-600 transition-colors shadow-sm">
-                    <Eye className="w-4 h-4" />
+                  {/* Overlaid Title on subtle bottom gradient */}
+                  <div className="absolute inset-x-0 bottom-0 bg-gradient-to-t from-slate-950/80 via-slate-950/40 to-transparent p-3 pt-6 flex items-end justify-between">
+                    <span className="text-xs font-semibold text-white drop-shadow-sm line-clamp-1">
+                      {item.title}
+                    </span>
+                    <div className="p-1.5 rounded-md bg-white/90 border border-gray-200 text-slate-700 group-hover:text-blue-600 transition-colors shadow-sm ml-2 shrink-0">
+                      <Eye className="w-3.5 h-3.5" />
+                    </div>
                   </div>
                 </div>
 
-                {/* Text Info */}
+                {/* Text Info Under the Image */}
                 <div className="p-5 space-y-2">
+                  <div className="flex items-center justify-between">
+                    <span className="text-[10px] font-bold uppercase tracking-wider px-2 py-0.5 rounded bg-blue-50 text-blue-700 border border-blue-100">
+                      {item.category}
+                    </span>
+                  </div>
+
                   <h3 className="text-base font-bold text-slate-900 group-hover:text-blue-600 transition-colors">
                     {item.title}
                   </h3>
-                  <p className="text-xs text-slate-500 line-clamp-2 leading-relaxed">
+
+                  <p className="text-xs text-slate-600 line-clamp-2 leading-relaxed">
                     {item.description}
                   </p>
 
@@ -126,6 +141,7 @@ export default function GalleryClient({ initialItems }: GalleryClientProps) {
                   src={selectedItem.imageUrl || "/uploads/overture-spool.png"}
                   alt={selectedItem.title}
                   fill
+                  unoptimized
                   className="object-cover"
                   sizes="(max-width: 768px) 100vw, 768px"
                 />

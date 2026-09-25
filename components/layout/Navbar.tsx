@@ -2,9 +2,9 @@
 
 import React, { useState, useEffect } from "react";
 import Link from "next/link";
-import Image from "next/image";
 import { usePathname } from "next/navigation";
 import { siteConfig } from "@/config/site";
+import { supabase } from "@/lib/supabase";
 import {
   Menu,
   X,
@@ -37,12 +37,41 @@ interface NavbarProps {
 export default function Navbar({ logo }: NavbarProps = {}) {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [servicesDropdownOpen, setServicesDropdownOpen] = useState(false);
+  const [logoSrc, setLogoSrc] = useState<string>(logo && logo.trim() !== "" ? logo : "/logo.png");
   const pathname = usePathname();
 
   useEffect(() => {
     setMobileMenuOpen(false);
     setServicesDropdownOpen(false);
   }, [pathname]);
+
+  useEffect(() => {
+    let isMounted = true;
+    if (logo && logo.trim() !== "") {
+      setLogoSrc(logo);
+    } else {
+      // Fetch logo key from site_content if not provided or to ensure latest
+      const fetchLogo = async () => {
+        try {
+          const { data, error } = await supabase
+            .from("site_content")
+            .select("key, value")
+            .eq("key", "logo")
+            .maybeSingle();
+
+          if (isMounted && !error && data?.value && data.value.trim() !== "") {
+            setLogoSrc(data.value);
+          }
+        } catch {
+          // Keep current fallback
+        }
+      };
+      fetchLogo();
+    }
+    return () => {
+      isMounted = false;
+    };
+  }, [logo]);
 
   return (
     <header className="sticky top-0 z-50 w-full bg-white shadow-sm border-b border-gray-200">
@@ -77,15 +106,12 @@ export default function Navbar({ logo }: NavbarProps = {}) {
           {/* Brand Logo */}
           <Link href="/" className="flex items-center space-x-3 group">
             <div className="relative w-10 h-10 rounded-md overflow-hidden border border-gray-300 bg-gray-50 p-1 group-hover:border-blue-600 transition-colors">
-              <Image
-                src={logo || "/logo.png"}
+              <img
+                src={logoSrc && logoSrc.trim() !== "" ? logoSrc : "/logo.png"}
                 alt="3D Creations Logo"
-                width={40}
-                height={40}
-                className="object-cover w-full h-full"
+                className="object-contain w-full h-full"
                 onError={(e) => {
-                  const target = e.target as HTMLElement;
-                  target.style.display = "none";
+                  (e.target as HTMLImageElement).src = "/logo.png";
                 }}
               />
               <div className="absolute inset-0 flex items-center justify-center font-bold text-blue-600 text-sm bg-white pointer-events-none opacity-0 hover:opacity-100 transition-opacity">
