@@ -1,7 +1,11 @@
 import React from "react";
 import { Metadata } from "next";
 import AdminDashboard from "@/components/admin/AdminDashboard";
-import { getAdminProducts, getSiteContentData } from "@/lib/actions/admin";
+import {
+  getAdminProducts,
+  getSiteContentData,
+  getAdminGalleryItems,
+} from "@/lib/actions/admin";
 
 export const metadata: Metadata = {
   title: "Admin Dashboard | 3D Creations",
@@ -15,15 +19,17 @@ export const metadata: Metadata = {
 export const dynamic = "force-dynamic";
 
 export default async function AdminPage() {
-  const [products, content] = await Promise.all([
+  const [products, content, gallery] = await Promise.all([
     getAdminProducts(),
     getSiteContentData(),
+    getAdminGalleryItems(),
   ]);
 
   return (
     <AdminDashboard
       initialProducts={products}
       initialContent={content}
+      initialGallery={gallery}
     />
   );
 }

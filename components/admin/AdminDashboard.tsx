@@ -8,10 +8,14 @@ import { logoutAdmin } from "@/lib/actions/auth";
 import {
   AdminProduct,
   SiteContentValues,
+  AdminGalleryItem,
   deleteProductAction,
   toggleProductStockAction,
   saveProductAction,
   saveSiteContentAction,
+  saveLogoAction,
+  uploadGalleryItemAction,
+  deleteGalleryItemAction,
 } from "@/lib/actions/admin";
 import {
   Package,
@@ -29,20 +33,37 @@ import {
   Loader2,
   Layers,
   Sparkles,
+  Image as ImageIcon,
 } from "lucide-react";
 
 interface AdminDashboardProps {
   initialProducts: AdminProduct[];
   initialContent: SiteContentValues;
+  initialGallery?: AdminGalleryItem[];
 }
 
 export default function AdminDashboard({
   initialProducts,
   initialContent,
+  initialGallery = [],
 }: AdminDashboardProps) {
-  const [activeTab, setActiveTab] = useState<"products" | "content">("products");
+  const [activeTab, setActiveTab] = useState<"products" | "content" | "media">("products");
   const [products, setProducts] = useState<AdminProduct[]>(initialProducts);
   const [content, setContent] = useState<SiteContentValues>(initialContent);
+  const [gallery, setGallery] = useState<AdminGalleryItem[]>(initialGallery);
+
+  // Logo state
+  const [logoFile, setLogoFile] = useState<File | null>(null);
+  const [logoPreview, setLogoPreview] = useState<string>(content.logo || "/logo.png");
+  const [isUploadingLogo, setIsUploadingLogo] = useState(false);
+
+  // Gallery upload state
+  const [galleryFile, setGalleryFile] = useState<File | null>(null);
+  const [galleryTitle, setGalleryTitle] = useState("");
+  const [galleryCategory, setGalleryCategory] = useState("3D Prints");
+  const [galleryDescription, setGalleryDescription] = useState("");
+  const [isUploadingGallery, setIsUploadingGallery] = useState(false);
+  const [deletingGalleryId, setDeletingGalleryId] = useState<string | null>(null);
 
   // Modal State for Product Add / Edit
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -63,6 +84,88 @@ export default function AdminDashboard({
     setTimeout(() => {
       setMessage(null);
     }, 4000);
+  };
+
+  // Handle Logo Upload
+  const handleLogoUpload = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    if (!logoFile) {
+      showNotification("error", "Please select a logo image file to upload.");
+      return;
+    }
+
+    setIsUploadingLogo(true);
+    const formData = new FormData();
+    formData.append("logoFile", logoFile);
+
+    try {
+      const res = await saveLogoAction(formData);
+      if (res.success && res.url) {
+        setContent((prev) => ({ ...prev, logo: res.url }));
+        setLogoPreview(res.url);
+        setLogoFile(null);
+        showNotification("success", "Logo uploaded to 'site-assets' and updated in 'site_content' table!");
+      } else {
+        showNotification("error", res.error || "Failed to update logo.");
+      }
+    } catch {
+      showNotification("error", "An error occurred while uploading the logo.");
+    } finally {
+      setIsUploadingLogo(false);
+    }
+  };
+
+  // Handle Gallery Upload
+  const handleGalleryUpload = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    if (!galleryFile) {
+      showNotification("error", "Please select an image file to upload to the gallery.");
+      return;
+    }
+
+    setIsUploadingGallery(true);
+    const formData = new FormData();
+    formData.append("galleryFile", galleryFile);
+    formData.append("title", galleryTitle);
+    formData.append("category", galleryCategory);
+    formData.append("description", galleryDescription);
+
+    try {
+      const res = await uploadGalleryItemAction(formData);
+      if (res.success && res.item) {
+        setGallery((prev) => [res.item!, ...prev]);
+        setGalleryFile(null);
+        setGalleryTitle("");
+        setGalleryDescription("");
+        showNotification("success", "Photo uploaded to 'site-assets' and added to gallery table!");
+      } else {
+        showNotification("error", res.error || "Failed to upload gallery photo.");
+      }
+    } catch {
+      showNotification("error", "An error occurred while uploading gallery photo.");
+    } finally {
+      setIsUploadingGallery(false);
+    }
+  };
+
+  // Handle Delete Gallery Item
+  const handleDeleteGalleryItem = async (id: string) => {
+    if (!confirm("Are you sure you want to remove this image from the gallery?")) return;
+    setDeletingGalleryId(id);
+
+    try {
+      const res = await deleteGalleryItemAction(id);
+      if (res.success) {
+        setGallery((prev) => prev.filter((item) => item.id !== id));
+        showNotification("success", "Gallery item deleted successfully.");
+      } else {
+        showNotification("error", res.error || "Failed to delete gallery item.");
+      }
+    } catch {
+      showNotification("error", "An error occurred while deleting gallery item.");
+    } finally {
+      setDeletingGalleryId(null);
+    }
   };
 
   // Open Add Product modal
@@ -297,6 +400,27 @@ export default function AdminDashboard({
           >
             <FileText className="w-4 h-4" />
             <span>Site Content &amp; Text</span>
+          </button>
+
+          <button
+            onClick={() => setActiveTab("media")}
+            className={`flex items-center gap-2 px-5 py-3 text-sm font-bold border-b-2 transition-colors ${
+              activeTab === "media"
+                ? "border-blue-600 text-blue-600 bg-white rounded-t-lg shadow-sm"
+                : "border-transparent text-slate-600 hover:text-slate-900 hover:border-slate-300"
+            }`}
+          >
+            <ImageIcon className="w-4 h-4" />
+            <span>Images &amp; Gallery</span>
+            <span
+              className={`ml-1 text-xs px-2 py-0.5 rounded-full ${
+                activeTab === "media"
+                  ? "bg-blue-100 text-blue-800"
+                  : "bg-slate-200 text-slate-700"
+              }`}
+            >
+              {gallery.length}
+            </span>
           </button>
         </div>
 
@@ -539,6 +663,284 @@ export default function AdminDashboard({
                 </button>
               </div>
             </form>
+          </div>
+        )}
+
+        {/* TAB 3: IMAGES & GALLERY */}
+        {activeTab === "media" && (
+          <div className="space-y-8 animate-in fade-in duration-150">
+            {/* SECTION 1: LOGO MANAGEMENT */}
+            <div className="bg-white rounded-xl border border-slate-200 shadow-sm p-6 sm:p-8 space-y-6">
+              <div className="border-b border-slate-200 pb-4">
+                <div className="flex items-center gap-2">
+                  <ImageIcon className="w-5 h-5 text-blue-600" />
+                  <h2 className="text-lg font-bold text-slate-900">Website Brand Logo</h2>
+                </div>
+                <p className="text-xs text-slate-500 mt-1">
+                  Upload a new logo to store in the <code className="text-blue-600 bg-blue-50 px-1 py-0.5 rounded">site-assets</code> Supabase bucket and dynamically update the navigation header.
+                </p>
+              </div>
+
+              <div className="grid grid-cols-1 md:grid-cols-12 gap-8 items-start">
+                {/* Current Logo Preview */}
+                <div className="md:col-span-4 bg-slate-50 border border-slate-200 rounded-xl p-6 text-center space-y-3">
+                  <span className="text-xs font-bold uppercase tracking-wider text-slate-500 block">
+                    Current Active Logo
+                  </span>
+                  <div className="w-32 h-32 mx-auto bg-white border border-slate-200 rounded-lg p-2 flex items-center justify-center overflow-hidden shadow-xs">
+                    <img
+                      src={logoPreview}
+                      alt="Brand Logo"
+                      className="max-w-full max-h-full object-contain"
+                      onError={(e) => {
+                        (e.target as HTMLImageElement).src = "/logo.png";
+                      }}
+                    />
+                  </div>
+                  <p className="text-[11px] text-slate-500 truncate" title={logoPreview}>
+                    {logoPreview.startsWith("http") ? "Supabase Storage URL" : "Static Default (/logo.png)"}
+                  </p>
+                </div>
+
+                {/* Upload Logo Form */}
+                <div className="md:col-span-8 space-y-4">
+                  <form onSubmit={handleLogoUpload} className="space-y-4">
+                    <div>
+                      <label className="block text-xs font-bold uppercase tracking-wider text-slate-700 mb-2">
+                        Select New Logo Image (PNG, SVG, JPG, WebP)
+                      </label>
+                      <div className="border-2 border-dashed border-slate-300 rounded-lg p-6 bg-slate-50/50 hover:bg-slate-50 transition-colors text-center">
+                        <input
+                          type="file"
+                          accept="image/png,image/jpeg,image/svg+xml,image/webp"
+                          id="logo-file-input"
+                          onChange={(e) => {
+                            const file = e.target.files?.[0] || null;
+                            setLogoFile(file);
+                            if (file) {
+                              setLogoPreview(URL.createObjectURL(file));
+                            }
+                          }}
+                          className="hidden"
+                        />
+                        <label htmlFor="logo-file-input" className="cursor-pointer space-y-2 block">
+                          <Upload className="w-8 h-8 text-blue-600 mx-auto" />
+                          <div className="text-sm font-semibold text-slate-900">
+                            {logoFile ? (
+                              <span className="text-blue-600 font-bold">{logoFile.name}</span>
+                            ) : (
+                              <>
+                                Click to choose file or <span className="text-blue-600 underline">browse</span>
+                              </>
+                            )}
+                          </div>
+                          <p className="text-[11px] text-slate-500">
+                            Recommended: Transparent background PNG or SVG (at least 200x200px)
+                          </p>
+                        </label>
+                      </div>
+                    </div>
+
+                    <div className="flex items-center justify-between pt-2">
+                      <span className="text-xs text-slate-500">
+                        Updates <code className="text-slate-700 font-mono">site_content.logo</code>
+                      </span>
+                      <button
+                        type="submit"
+                        disabled={isUploadingLogo || !logoFile}
+                        className="inline-flex items-center gap-2 px-6 py-2.5 bg-blue-600 hover:bg-blue-700 text-white text-sm font-bold rounded-lg shadow-sm transition-colors disabled:opacity-50"
+                      >
+                        {isUploadingLogo ? (
+                          <>
+                            <Loader2 className="w-4 h-4 animate-spin" />
+                            <span>Uploading to site-assets...</span>
+                          </>
+                        ) : (
+                          <>
+                            <Upload className="w-4 h-4" />
+                            <span>Save &amp; Update Logo</span>
+                          </>
+                        )}
+                      </button>
+                    </div>
+                  </form>
+                </div>
+              </div>
+            </div>
+
+            {/* SECTION 2: GALLERY MANAGEMENT */}
+            <div className="bg-white rounded-xl border border-slate-200 shadow-sm p-6 sm:p-8 space-y-8">
+              <div className="border-b border-slate-200 pb-4 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+                <div>
+                  <div className="flex items-center gap-2">
+                    <Layers className="w-5 h-5 text-blue-600" />
+                    <h2 className="text-lg font-bold text-slate-900">Portfolio &amp; Project Gallery</h2>
+                  </div>
+                  <p className="text-xs text-slate-500 mt-1">
+                    Manage real scanning and printing showcase photos stored in the <code className="text-blue-600 bg-blue-50 px-1 py-0.5 rounded">gallery</code> table.
+                  </p>
+                </div>
+                <span className="text-xs font-bold text-slate-700 bg-slate-100 px-3 py-1.5 rounded-full border border-slate-200 self-start sm:self-auto">
+                  {gallery.length} Images in Database
+                </span>
+              </div>
+
+              {/* Upload to Gallery Card */}
+              <div className="bg-slate-50 border border-slate-200 rounded-xl p-6 space-y-4">
+                <h3 className="text-sm font-bold uppercase tracking-wider text-slate-800 flex items-center gap-2">
+                  <Plus className="w-4 h-4 text-blue-600" />
+                  <span>Upload New Image to Gallery</span>
+                </h3>
+
+                <form onSubmit={handleGalleryUpload} className="space-y-4">
+                  <div className="grid grid-cols-1 sm:grid-cols-12 gap-4">
+                    <div className="sm:col-span-6 space-y-1">
+                      <label className="block text-xs font-bold uppercase tracking-wider text-slate-700">
+                        Image File *
+                      </label>
+                      <input
+                        type="file"
+                        accept="image/*"
+                        required
+                        onChange={(e) => setGalleryFile(e.target.files?.[0] || null)}
+                        className="w-full text-xs text-slate-600 file:mr-3 file:py-2 file:px-4 file:rounded-md file:border-0 file:text-xs file:font-semibold file:bg-blue-600 file:text-white hover:file:bg-blue-700 file:cursor-pointer bg-white p-1 border border-slate-300 rounded-lg"
+                      />
+                    </div>
+
+                    <div className="sm:col-span-6 space-y-1">
+                      <label className="block text-xs font-bold uppercase tracking-wider text-slate-700">
+                        Category
+                      </label>
+                      <select
+                        value={galleryCategory}
+                        onChange={(e) => setGalleryCategory(e.target.value)}
+                        className="w-full h-10 px-3 py-2 text-xs font-semibold border border-slate-300 rounded-lg focus:ring-2 focus:ring-blue-600 text-slate-900 bg-white"
+                      >
+                        <option value="3D Prints">3D Prints</option>
+                        <option value="3D Scans">3D Scans</option>
+                        <option value="Laser Engraving">Laser Engraving</option>
+                        <option value="Replacement Parts">Replacement Parts</option>
+                      </select>
+                    </div>
+
+                    <div className="sm:col-span-6 space-y-1">
+                      <label className="block text-xs font-bold uppercase tracking-wider text-slate-700">
+                        Project Title (Optional)
+                      </label>
+                      <input
+                        type="text"
+                        value={galleryTitle}
+                        onChange={(e) => setGalleryTitle(e.target.value)}
+                        placeholder="e.g. Drone Motor Mount or Impeller Scan"
+                        className="w-full h-10 px-3.5 py-2 text-xs border border-slate-300 rounded-lg focus:ring-2 focus:ring-blue-600 text-slate-900 bg-white"
+                      />
+                    </div>
+
+                    <div className="sm:col-span-6 space-y-1">
+                      <label className="block text-xs font-bold uppercase tracking-wider text-slate-700">
+                        Brief Description (Optional)
+                      </label>
+                      <input
+                        type="text"
+                        value={galleryDescription}
+                        onChange={(e) => setGalleryDescription(e.target.value)}
+                        placeholder="e.g. Scanned with Revopoint METRO X at 0.02mm resolution"
+                        className="w-full h-10 px-3.5 py-2 text-xs border border-slate-300 rounded-lg focus:ring-2 focus:ring-blue-600 text-slate-900 bg-white"
+                      />
+                    </div>
+                  </div>
+
+                  <div className="flex justify-end pt-2">
+                    <button
+                      type="submit"
+                      disabled={isUploadingGallery || !galleryFile}
+                      className="inline-flex items-center gap-2 px-6 py-2.5 bg-blue-600 hover:bg-blue-700 text-white text-xs font-bold rounded-lg shadow-sm transition-colors disabled:opacity-50"
+                    >
+                      {isUploadingGallery ? (
+                        <>
+                          <Loader2 className="w-3.5 h-3.5 animate-spin" />
+                          <span>Uploading to site-assets &amp; Saving...</span>
+                        </>
+                      ) : (
+                        <>
+                          <Upload className="w-3.5 h-3.5" />
+                          <span>Upload to Gallery</span>
+                        </>
+                      )}
+                    </button>
+                  </div>
+                </form>
+              </div>
+
+              {/* Gallery Grid */}
+              {gallery.length === 0 ? (
+                <div className="text-center py-12 bg-slate-50 border border-dashed border-slate-300 rounded-xl space-y-3">
+                  <ImageIcon className="w-12 h-12 text-slate-400 mx-auto" />
+                  <h4 className="text-sm font-bold text-slate-700">No Gallery Items in Supabase</h4>
+                  <p className="text-xs text-slate-500 max-w-sm mx-auto">
+                    The <code className="text-slate-700 font-mono">gallery</code> table has no images yet. Upload your first showcase photo using the form above.
+                  </p>
+                </div>
+              ) : (
+                <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+                  {gallery.map((item) => (
+                    <div
+                      key={item.id}
+                      className="bg-white border border-slate-200 rounded-xl overflow-hidden shadow-xs hover:shadow-md transition-shadow flex flex-col justify-between"
+                    >
+                      <div className="relative h-44 w-full bg-slate-100 overflow-hidden">
+                        <img
+                          src={item.imageUrl}
+                          alt={item.title}
+                          className="w-full h-full object-cover"
+                          onError={(e) => {
+                            (e.target as HTMLImageElement).src = "/logo.png";
+                          }}
+                        />
+                        {item.category && (
+                          <span className="absolute top-2 left-2 text-[10px] font-bold uppercase tracking-wider bg-white/95 text-blue-700 px-2 py-0.5 rounded shadow-xs border border-blue-200">
+                            {item.category}
+                          </span>
+                        )}
+                      </div>
+
+                      <div className="p-4 space-y-2 flex-grow flex flex-col justify-between">
+                        <div>
+                          <h4 className="text-xs font-bold text-slate-900 line-clamp-1">
+                            {item.title}
+                          </h4>
+                          {item.description && (
+                            <p className="text-[11px] text-slate-500 line-clamp-2 mt-0.5">
+                              {item.description}
+                            </p>
+                          )}
+                        </div>
+
+                        <div className="pt-3 border-t border-slate-100 flex items-center justify-between">
+                          <span className="text-[10px] text-slate-400 font-mono truncate max-w-[120px]">
+                            ID: {item.id}
+                          </span>
+                          <button
+                            type="button"
+                            onClick={() => handleDeleteGalleryItem(item.id)}
+                            disabled={deletingGalleryId === item.id}
+                            className="inline-flex items-center gap-1 px-2.5 py-1 text-xs font-bold text-red-600 hover:text-red-700 hover:bg-red-50 rounded transition-colors disabled:opacity-50"
+                            title="Delete from gallery table"
+                          >
+                            {deletingGalleryId === item.id ? (
+                              <Loader2 className="w-3.5 h-3.5 animate-spin" />
+                            ) : (
+                              <Trash2 className="w-3.5 h-3.5" />
+                            )}
+                            <span>Delete</span>
+                          </button>
+                        </div>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              )}
+            </div>
           </div>
         )}
       </main>

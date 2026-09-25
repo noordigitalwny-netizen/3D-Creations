@@ -98,7 +98,7 @@ export default async function RootLayout({
         />
       </head>
       <body className="min-h-screen bg-white text-slate-900 flex flex-col antialiased selection:bg-blue-600 selection:text-white">
-        <Navbar />
+        <Navbar logo={siteContent?.logo} />
         <main className="flex-grow">{children}</main>
         <Footer content={siteContent} />
       </body>

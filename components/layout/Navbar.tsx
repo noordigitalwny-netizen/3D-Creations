@@ -30,7 +30,11 @@ const iconMap: Record<string, React.ReactNode> = {
   Layers: <Layers className="w-5 h-5 text-blue-600" />,
 };
 
-export default function Navbar() {
+interface NavbarProps {
+  logo?: string;
+}
+
+export default function Navbar({ logo }: NavbarProps = {}) {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [servicesDropdownOpen, setServicesDropdownOpen] = useState(false);
   const pathname = usePathname();
@@ -74,7 +78,7 @@ export default function Navbar() {
           <Link href="/" className="flex items-center space-x-3 group">
             <div className="relative w-10 h-10 rounded-md overflow-hidden border border-gray-300 bg-gray-50 p-1 group-hover:border-blue-600 transition-colors">
               <Image
-                src="/logo.png"
+                src={logo || "/logo.png"}
                 alt="3D Creations Logo"
                 width={40}
                 height={40}
