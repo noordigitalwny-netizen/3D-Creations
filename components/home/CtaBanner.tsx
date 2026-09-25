@@ -27,7 +27,7 @@ export default function CtaBanner({
         </h2>
 
         <p className="text-base sm:text-lg text-blue-100 max-w-2xl mx-auto leading-relaxed">
-          Upload your STL, STEP, or blueprint files, or drop off physical parts at our Slate Belt studio for instant local evaluation.
+          Submit your project specifications online or drop off physical parts at our Slate Belt studio for instant local evaluation.
         </p>
 
         <div className="pt-4 flex flex-col sm:flex-row items-center justify-center gap-4">

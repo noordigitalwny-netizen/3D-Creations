@@ -248,7 +248,7 @@ export default function PrintCalculator() {
               href={`/contact?service=3d-printing&material=${selectedMaterial}&weight=${weightGrams}&time=${timeHours}&estimate=${estimate.average}`}
               className="w-full flex items-center justify-center space-x-1.5 py-2.5 px-4 text-xs font-semibold text-blue-700 bg-white hover:bg-blue-50 border border-blue-200 rounded-md transition-colors"
             >
-              <span>Or attach 3D CAD/STL files on full contact page</span>
+              <span>Or submit detailed specifications on full contact page</span>
               <ArrowRight className="w-3.5 h-3.5" />
             </Link>
           </div>

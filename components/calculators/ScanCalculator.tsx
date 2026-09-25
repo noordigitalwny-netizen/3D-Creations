@@ -205,7 +205,7 @@ export default function ScanCalculator() {
               href={`/contact?service=3d-scanning&size=${sizeTier}&purpose=${complexity}&estimate=${estimate.average}`}
               className="w-full flex items-center justify-center space-x-1.5 py-2.5 px-4 text-xs font-semibold text-blue-700 bg-white hover:bg-blue-50 border border-blue-200 rounded-md transition-colors"
             >
-              <span>Or attach part photos on full contact page</span>
+              <span>Or submit detailed project inquiry on full contact page</span>
               <ArrowRight className="w-3.5 h-3.5" />
             </Link>
           </div>
@@ -213,7 +213,7 @@ export default function ScanCalculator() {
           <div className="p-3 bg-white rounded-md border border-blue-200 flex items-start space-x-2 text-[11px] text-slate-600">
             <AlertCircle className="w-4 h-4 text-blue-600 shrink-0 mt-0.5" />
             <span>
-              Disclaimer: Final scanning quote is confirmed after visual part inspection at our Bangor, PA studio or via uploaded part photos.
+              Disclaimer: Final scanning quote is confirmed after visual part inspection at our Bangor, PA studio or via project specifications.
             </span>
           </div>
         </div>

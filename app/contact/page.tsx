@@ -6,9 +6,6 @@ import { siteConfig } from "@/config/site";
 import { servicesData } from "@/data/services";
 import {
   Send,
-  UploadCloud,
-  File,
-  X,
   MapPin,
   Phone,
   Mail,
@@ -30,8 +27,6 @@ function ContactFormInner() {
     pickupPreference: "local-bangor",
   });
 
-  const [uploadedFiles, setUploadedFiles] = useState<File[]>([]);
-  const [isDragging, setIsDragging] = useState(false);
   const [submitting, setSubmitting] = useState(false);
   const [submittedSuccess, setSubmittedSuccess] = useState(false);
   const [errorMessage, setErrorMessage] = useState("");
@@ -58,38 +53,10 @@ function ContactFormInner() {
     } else if (estimateParam) {
       setFormData((prev) => ({
         ...prev,
-        description: `ONLINE ESTIMATOR SUMMARY:\n- Estimated Price: ~$${estimateParam}\n- Details: ${materialParam || ""} (${weightParam || ""}g)\n- Please review attached design/scan requirement.`,
+        description: `ONLINE ESTIMATOR SUMMARY:\n- Estimated Price: ~$${estimateParam}\n- Details: ${materialParam || ""} (${weightParam || ""}g)\n- Please review specifications.`,
       }));
     }
   }, [searchParams]);
-
-  const handleDragOver = (e: React.DragEvent) => {
-    e.preventDefault();
-    setIsDragging(true);
-  };
-  const handleDragLeave = (e: React.DragEvent) => {
-    e.preventDefault();
-    setIsDragging(false);
-  };
-  const handleDrop = (e: React.DragEvent) => {
-    e.preventDefault();
-    setIsDragging(false);
-    if (e.dataTransfer.files && e.dataTransfer.files.length > 0) {
-      const newFiles = Array.from(e.dataTransfer.files);
-      setUploadedFiles((prev) => [...prev, ...newFiles]);
-    }
-  };
-
-  const handleFileInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    if (e.target.files && e.target.files.length > 0) {
-      const newFiles = Array.from(e.target.files);
-      setUploadedFiles((prev) => [...prev, ...newFiles]);
-    }
-  };
-
-  const removeFile = (index: number) => {
-    setUploadedFiles((prev) => prev.filter((_, i) => i !== index));
-  };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -103,7 +70,6 @@ function ContactFormInner() {
     setSubmitting(true);
 
     try {
-      const fileNames = uploadedFiles.map((f) => f.name).join(", ");
       const accessKey =
         process.env.NEXT_PUBLIC_WEB3FORMS_ACCESS_KEY ||
         "6e8ee156-1d13-4e7e-a9e8-6a65c1952042";
@@ -118,7 +84,6 @@ function ContactFormInner() {
         service_needed: formData.serviceNeeded,
         pickup_preference: formData.pickupPreference,
         message: formData.description,
-        attached_files: fileNames || "None attached",
       };
 
       const res = await fetch("https://api.web3forms.com/submit", {
@@ -242,85 +207,22 @@ function ContactFormInner() {
               </select>
             </div>
 
-            {/* Drag-and-Drop File Upload UI */}
-            <div className="space-y-2">
-              <label className="text-xs font-bold text-slate-700 uppercase tracking-wider block">
-                Attach 3D Files or Photos (STL, OBJ, STEP, PNG, JPG)
-              </label>
-              <div
-                onDragOver={handleDragOver}
-                onDragLeave={handleDragLeave}
-                onDrop={handleDrop}
-                className={`border-2 border-dashed rounded-lg p-6 text-center transition-all cursor-pointer ${
-                  isDragging
-                    ? "border-blue-600 bg-blue-50"
-                    : "border-gray-300 bg-gray-50 hover:border-gray-400"
-                }`}
-              >
-                <input
-                  type="file"
-                  multiple
-                  accept=".stl,.obj,.step,.stp,.ply,.png,.jpg,.jpeg,.pdf"
-                  onChange={handleFileInputChange}
-                  className="hidden"
-                  id="file-upload-input"
-                />
-                <label htmlFor="file-upload-input" className="cursor-pointer space-y-2 block">
-                  <UploadCloud className="w-10 h-10 text-blue-600 mx-auto" />
-                  <div className="text-sm font-bold text-slate-900">
-                    Drag & Drop files here, or <span className="text-blue-600 underline">Browse</span>
-                  </div>
-                  <p className="text-[11px] text-slate-500">
-                    Supports STL, OBJ, STEP, PLY models and part photos up to 100MB
-                  </p>
-                </label>
-              </div>
-
-              {/* Uploaded File Previews */}
-              {uploadedFiles.length > 0 && (
-                <div className="space-y-2 pt-2">
-                  <div className="text-xs font-semibold text-slate-700">
-                    Attached Files ({uploadedFiles.length}):
-                  </div>
-                  <div className="space-y-1.5">
-                    {uploadedFiles.map((file, idx) => (
-                      <div
-                        key={idx}
-                        className="flex items-center justify-between p-2.5 rounded bg-gray-50 border border-gray-200 text-xs text-slate-800"
-                      >
-                        <div className="flex items-center space-x-2 truncate">
-                          <File className="w-4 h-4 text-blue-600 shrink-0" />
-                          <span className="truncate">{file.name}</span>
-                          <span className="text-[10px] text-slate-500 font-mono">
-                            ({(file.size / 1024 / 1024).toFixed(2)} MB)
-                          </span>
-                        </div>
-                        <button
-                          type="button"
-                          onClick={() => removeFile(idx)}
-                          className="text-slate-400 hover:text-red-600 p-1"
-                        >
-                          <X className="w-4 h-4" />
-                        </button>
-                      </div>
-                    ))}
-                  </div>
-                </div>
-              )}
-            </div>
-
             {/* Project Description */}
             <div className="space-y-1.5">
               <label className="text-xs font-bold text-slate-700 uppercase tracking-wider block">
-                Project Description & Specific Requirements
+                Project Description & Specific Requirements *
               </label>
               <textarea
-                rows={4}
-                placeholder="Describe your part tolerances, material preferences, quantity, or specific fitment issues..."
+                rows={6}
+                required
+                placeholder="Describe your part specifications, tolerances, material preferences, quantity, or specific fitment issues. If you have 3D models (STL/STEP) or reference images, you may include a public Google Drive / Dropbox link here..."
                 value={formData.description}
                 onChange={(e) => setFormData({ ...formData, description: e.target.value })}
                 className="w-full p-4 bg-white text-sm text-slate-900 border border-gray-300 rounded-md focus:outline-none focus:border-blue-600"
               ></textarea>
+              <p className="text-[11px] text-slate-500">
+                Have 3D CAD files or large drawings? You can include a public Google Drive or Dropbox link above, or drop off physical parts directly at our Bangor, PA facility.
+              </p>
             </div>
 
             {/* Submit Button */}
@@ -415,10 +317,10 @@ export default function ContactQuotePage() {
             Slate Belt Local Studio
           </span>
           <h1 className="text-3xl sm:text-5xl font-extrabold text-slate-900 tracking-tight">
-            Request a Free Quote & Submit Files
+            Request a Free Quote & Project Estimate
           </h1>
           <p className="text-base text-slate-600">
-            Upload your 3D CAD files (STL, OBJ, STEP) or describe your broken part. We review all submissions within 4 business hours.
+            Tell us about your project specifications or describe your broken part. We review all submissions within 4 business hours.
           </p>
         </div>
 

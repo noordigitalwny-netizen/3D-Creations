@@ -10,7 +10,7 @@ Production-ready Next.js 14 (App Router) web application built for **3D Creation
 - **Metrology Spotlight**: Showcasing Revopoint METRO X (0.02mm metrology accuracy), Bambu Lab X1 Carbon & H2C, and xTool S1.
 - **Interactive Pricing Calculators**: Live 3D print and 3D scan price estimator engine in [`lib/pricing.ts`](lib/pricing.ts) with real-time UI components.
 - **Filament Store Showcase**: Inventory catalog for local Overture PLA spool stock with pickup reservation ([`data/products.ts`](data/products.ts)).
-- **Custom Quote & Lead Capture Form**: Drag-and-drop file upload zone (STL, OBJ, STEP) with Bangor PA sidebar.
+- **Custom Quote & Lead Capture Form**: Web3Forms-integrated inquiry form with service selection and Bangor PA studio sidebar.
 - **Filterable Project Gallery**: Category grid with full-screen interactive lightbox modal preview.
 - **SEO & Schema**: Local business OpenGraph metadata and JSON-LD `LocalBusiness` schema targeting Bangor & Slate Belt, PA.
 
