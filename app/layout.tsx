@@ -6,6 +6,10 @@ import { siteConfig } from "@/config/site";
 import { getSiteContentData } from "@/lib/actions/admin";
 
 export const metadata: Metadata = {
+  metadataBase: new URL("https://www.3dcreation.com"),
+  alternates: {
+    canonical: "./",
+  },
   title: {
     default: siteConfig.seo.defaultTitle,
     template: siteConfig.seo.titleTemplate,
@@ -13,11 +17,10 @@ export const metadata: Metadata = {
   description: siteConfig.seo.defaultDescription,
   keywords: siteConfig.seo.keywords,
   authors: [{ name: siteConfig.name }],
-  metadataBase: new URL(siteConfig.url),
   openGraph: {
     title: siteConfig.seo.defaultTitle,
     description: siteConfig.seo.defaultDescription,
-    url: siteConfig.url,
+    url: "https://www.3dcreation.com",
     siteName: siteConfig.name,
     locale: "en_US",
     type: "website",

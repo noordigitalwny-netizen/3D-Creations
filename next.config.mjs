@@ -18,6 +18,54 @@ const nextConfig = {
     contentDispositionType: "attachment",
     contentSecurityPolicy: "default-src 'self'; script-src 'none'; sandbox;",
   },
+  async redirects() {
+    return [
+      {
+        source: "/:path*",
+        has: [
+          {
+            type: "host",
+            value: "3dcreation.com",
+          },
+        ],
+        destination: "https://www.3dcreation.com/:path*",
+        permanent: true,
+      },
+      {
+        source: "/:path*",
+        has: [
+          {
+            type: "host",
+            value: "3d-creations.vercel.app",
+          },
+        ],
+        destination: "https://www.3dcreation.com/:path*",
+        permanent: true,
+      },
+      {
+        source: "/:path*",
+        has: [
+          {
+            type: "host",
+            value: "3dcreationspa.com",
+          },
+        ],
+        destination: "https://www.3dcreation.com/:path*",
+        permanent: true,
+      },
+      {
+        source: "/:path*",
+        has: [
+          {
+            type: "host",
+            value: "www.3dcreationspa.com",
+          },
+        ],
+        destination: "https://www.3dcreation.com/:path*",
+        permanent: true,
+      },
+    ];
+  },
 };
 
 export default nextConfig;

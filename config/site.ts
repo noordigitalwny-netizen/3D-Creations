@@ -48,8 +48,8 @@ export const siteConfig: SiteConfig = {
   tagline: "Metrology-Grade 3D Scanning & Multi-Color 3D Printing",
   description:
     "Local high-precision 3D printing, metrology-grade 3D scanning (0.02 mm accuracy), reverse engineering, laser engraving, and custom replacement parts in Bangor, PA and the Slate Belt region.",
-  url: "https://3dcreationspa.com",
-  ogImage: "https://3dcreationspa.com/og.jpg",
+  url: "https://www.3dcreation.com",
+  ogImage: "https://www.3dcreation.com/og.jpg",
 
   location: {
     address: "Slate Belt Industrial Corridor",
